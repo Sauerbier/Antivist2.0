@@ -1,0 +1,121 @@
+{
+  "spriteSheets": [
+    {
+      "name": "blocks",
+      "path": "/textures/block_sheet.png",
+      "size": 512
+    },
+    {
+      "name": "playerSheet",
+      "path": "/textures/player_sheet.png",
+      "size": 512
+    }
+  ],
+  "sprites": [
+    {
+      "name": "air",
+      "color" : "0",
+      "class" : "me.Sauerbier.Antivist.Level.Tiles.AirBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 9,
+      "y": 0,
+      "sheet": "blocks"
+    },
+    {
+      "name": "grass_top_left",
+      "color" : "3c280a",
+      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 0,
+      "y": 0,
+      "sheet": "blocks"
+    },
+    {
+      "name": "grass",
+      "color" : "00ff00",
+      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 1,
+      "y": 0,
+      "sheet": "blocks"
+    },
+    {
+      "name": "grass_top_right",
+      "color" : "3D2915",
+      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 2,
+      "y": 0,
+      "sheet": "blocks"
+    },
+    {
+      "name": "Stone",
+      "color" : "808080",
+      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 4,
+      "y": 1,
+      "sheet": "blocks"
+    },
+    {
+      "name": "dirt",
+      "color" : "806600",
+      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultNonSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 0,
+      "y": 1,
+      "sheet": "blocks"
+    },
+    {
+      "name": "player0",
+      "color" : "2",
+      "sizeX": 32,
+      "sizeY": 64,
+      "x": 0,
+      "y": 0,
+      "sheet": "playerSheet"
+    },
+    {
+      "name": "player1",
+      "color" : "2",
+      "sizeX": 32,
+      "sizeY": 64,
+      "x": 1,
+      "y": 0,
+      "sheet": "playerSheet"
+    },
+    {
+      "name": "player2",
+      "color" : "2",
+      "sizeX": 32,
+      "sizeY": 64,
+      "x": 4,
+      "y": 0,
+      "sheet": "playerSheet"
+    },
+    {
+      "name": "player3",
+      "color" : "2",
+      "sizeX": 32,
+      "sizeY": 64,
+      "x": 2,
+      "y": 0,
+      "sheet": "playerSheet"
+    },
+    {
+      "name": "player4",
+      "color" : "2",
+      "sizeX": 32,
+      "sizeY": 64,
+      "x": 3,
+      "y": 0,
+      "sheet": "playerSheet"
+    }
+  ]
+}
