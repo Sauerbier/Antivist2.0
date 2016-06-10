@@ -1,6 +1,6 @@
 # Antivist 2.0 #
 Antivist is a indie game written in Java. It's a complete remake of Version one and does not use any game libaries / APIs.
-The main idea behind this game is:
+The main idea behind this game is:\n
 * Create and play different stories (levels)
 * Unlock a lot of new items and characters
 * Develop your characters by playing the base story line
