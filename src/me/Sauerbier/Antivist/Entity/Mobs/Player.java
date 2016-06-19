@@ -1,6 +1,10 @@
 package me.Sauerbier.Antivist.Entity.Mobs;
 
+import me.Sauerbier.Antivist.Antivist;
+import me.Sauerbier.Antivist.Entity.Projectiles.Bullet;
 import me.Sauerbier.Antivist.FrameWork.Keyboard;
+import me.Sauerbier.Antivist.FrameWork.Mouse;
+import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.AnimatedSprite;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.Graphics.Sprite;
@@ -11,15 +15,20 @@ import me.Sauerbier.Antivist.Level.Level;
  * @Copyright 2016 by Jan Hof
  * All rights reserved.
  **/
-public class Player extends  Mob{
+public class Player extends Mob {
+
+    //TODO should be moved to the gun item
+    public static int FIRERATE = 3;
+
 
     private Keyboard keyboard;
-    private Sprite idle_left,idle_right,walk_left,walk_right, currentSprite;
+    private Sprite idle_left, idle_right, walk_left, walk_right, currentSprite;
     private AnimatedSprite animation_left;
     private int speed = 4;
     private boolean walking;
+    private int gravity, jumpboost, maxSpeed = 10;
 
-    public Player(Level level, Keyboard keyboard){
+    public Player(Level level, Keyboard keyboard) {
         this.keyboard = keyboard;
         setLevel(level);
         setSprite(getLevel().getResources().getSpriteByName("player0"));
@@ -28,12 +37,13 @@ public class Player extends  Mob{
         walk_left = getLevel().getResources().getSpriteByName("player3");
         walk_right = getLevel().getResources().getSpriteByName("player4");
         currentSprite = getSprite();
-        animation_left = new AnimatedSprite(idle_left,walk_left);
-        setX(0);
-        setY(0);
+        animation_left = new AnimatedSprite(idle_left, walk_left);
+        gravity = getLevel().getMetadata().get("gravity").getAsInt();
+        getPosition().setX(0);
+        getPosition().setY(0);
     }
 
-    public Player(Level level,Keyboard keyboard, int xSpawn, int ySpawn){
+    public Player(Level level, Keyboard keyboard, int xSpawn, int ySpawn) {
         this.keyboard = keyboard;
         setLevel(level);
         setSprite(getLevel().getResources().getSpriteByName("player0"));
@@ -41,59 +51,88 @@ public class Player extends  Mob{
         idle_right = getLevel().getResources().getSpriteByName("player2");
         walk_left = getLevel().getResources().getSpriteByName("player3");
         walk_right = getLevel().getResources().getSpriteByName("player4");
+        gravity = getLevel().getMetadata().get("gravity").getAsInt();
         currentSprite = getSprite();
-        animation_left = new AnimatedSprite(idle_left,walk_left);
-        setX(xSpawn*level.getScreen().getTileSize());
-        setY(ySpawn*level.getScreen().getTileSize());
+        animation_left = new AnimatedSprite(idle_left, walk_left);
+        getPosition().setX(xSpawn * level.getScreen().getTileSize());
+        getPosition(). setY(ySpawn * level.getScreen().getTileSize());
     }
 
     @Override
-    public void move(int xa,int ya) {
-        if(xa > 0) setDirection(1);
-        if(xa < 0) setDirection(3);
-        if(ya > 0) setDirection(2);
-        if(ya < 0) setDirection(0);
-        if(!collision(xa, ya)) {
-            setX(getX() + xa);
-            setY(getY() + ya);
+    public void move(int xa, int ya) {
+        if (xa != 0 && ya != 0) {
+            move(0, ya);
+            move(xa, 0);
+            return;
         }
+
+        if (xa > 0) setDirection(1);
+        else if (xa < 0) setDirection(3);
+        else if (ya > 0) setDirection(2);
+        else if (ya < 0) setDirection(0);
+
+        if (!collision(xa, ya)) {
+            getPosition().setX( getPosition().getX() + xa);
+            getPosition(). setY(getPosition().getY() + ya);
+        }
+
     }
 
     @Override
-    public boolean collision(int xa, int ya) {
-        boolean solid = false;
-        if (getLevel().getBlock((getX() + xa)>>getLevel().getScreen().getTileSizeMask(),(getY() + ya)>>getLevel().getScreen().getTileSizeMask()).isSolid()) solid = true;
-        return solid;
+    public boolean collision(int x, int y) {
+        return defaultBlockCollision(x, y, 2, 2);
     }
 
     @Override
     public void update() {
         animation_left.update();
         int xa = 0, ya = 0;
-        if(keyboard.isUp()) ya-=speed;
-        if(keyboard.isDown()) ya+=speed;
-        if(keyboard.isLeft()) xa-=speed;
-        if(keyboard.isRight()) xa+=speed;
+        if (isOnGround() && keyboard.isJump()) {
+            jumpboost = -gravity * speed + gravity;
+            setOnGround(false);
+        }
 
-        if(xa != 0 || ya != 0){
-            move(xa,ya);
+        if (jumpboost > maxSpeed) jumpboost = maxSpeed;
+        ya += jumpboost;
+        jumpboost++;
+
+        if (keyboard.isLeft()) xa -= speed;
+        if (keyboard.isRight()) xa += speed;
+        if (xa != 0 || ya != 0) {
+            move(xa, ya);
             walking = true;
-        }else walking = false;
+        } else walking = false;
+
+        if(FIRERATE > 0 ) {
+            FIRERATE--;
+        }else{
+            FIRERATE = 3;
+            if (Mouse.getMouseButton() == 1) {
+                double dx = Mouse.getMouseX() - Antivist.getInstance().getWidth() / 2;
+                double dy = Mouse.getMouseY() - Antivist.getInstance().getHeight() / 2 + 32;
+                double dir = Math.atan2(dy, dx);
+                shoot(new Bullet(getLevel(), this, new Vector2i( getPosition().getX(),  getPosition().getY() + getSprite().getSizeY() / 2), dir));
+            }
+        }
     }
 
     @Override
     public void render(Screen screen) {
-        if(!walking){
-            screen.renderSprite(getX(),getY(),getSprite());
+        if (!walking) {
+            screen.renderSprite( getPosition().getX(),  getPosition().getY(), getSprite());
             return;
         }
-        if(getDirection() == 0) screen.renderSprite(getX(), getY(), getSprite());
-        if(getDirection() == 1) screen.renderSprite(getX(),getY(),animation_left.getCurrentFrame());
-        if(getDirection() == 2) screen.renderSprite(getX(),getY(),getSprite());
-        if(getDirection() == 3) screen.renderReversedSprite(getX(),getY(),animation_left.getCurrentFrame(),Screen.FLIP_Y);
+        if (getDirection() == 0) screen.renderSprite( getPosition().getX(),  getPosition().getY(), getSprite());
+        if (getDirection() == 1) screen.renderSprite( getPosition().getX(),  getPosition().getY(), animation_left.getCurrentFrame());
+        if (getDirection() == 3)
+            screen.renderReversedSprite( getPosition().getX(),  getPosition().getY(), animation_left.getCurrentFrame(), Screen.FLIP_Y);
+        if (getDirection() == 2) screen.renderSprite( getPosition().getX(),  getPosition().getY(), getSprite());
 
 
     }
+
+
+
 
     public Keyboard getKeyboard() {
         return keyboard;

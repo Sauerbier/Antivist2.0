@@ -3,8 +3,10 @@ package me.Sauerbier.Antivist.Level;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Antivist;
+import me.Sauerbier.Antivist.Entity.Entity;
 import me.Sauerbier.Antivist.Entity.Mobs.Player;
 import me.Sauerbier.Antivist.FrameWork.Keyboard;
+import me.Sauerbier.Antivist.FrameWork.Mouse;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.ResourceManagement.Resources;
 
@@ -14,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author Sauerbier | Jan
@@ -32,13 +36,16 @@ public class Level {
     private Resources resources;
     private Screen screen;
     private Keyboard keyboard;
+    private Mouse mouse;
     private Player clientPlayer;
+    private List<Entity> entities = new ArrayList<>();
 
     public Level(File levelDir) {
         this.levelDir = levelDir;
         this.name = levelDir.getName();
         resources = new Resources();
         keyboard = new Keyboard();
+        mouse = new Mouse();
         try {
             resources.loadSprites(Antivist.class.getResource("/levels/"+name+ "/Sprites.json").getPath());
         } catch (FileNotFoundException e) {
@@ -76,9 +83,24 @@ public class Level {
         }
     }
 
-    public void update() {
+    public void update(int xScroll, int yScroll) {
+        int x0 = xScroll >> screen.getTileSizeMask();
+        int x1 = (xScroll + screen.getWidth() + screen.getTileSize()) >> screen.getTileSizeMask();
+        int y0 = yScroll >> screen.getTileSizeMask();
+        int y1 = (yScroll + screen.getHeight()+ screen.getTileSize()) >> screen.getTileSizeMask();
+
+        for (int y = y0; y < y1; y++) {
+            for (int x = x0; x < x1; x++) {
+                getBlock(x, y).update();
+            }
+        }
+
         keyboard.update();
         clientPlayer.update();
+
+        for (int i = 0; i < entities.size(); i++) {
+            entities.get(i).update();
+        }
     }
 
     public void render(int xScroll, int yScroll) {
@@ -94,6 +116,9 @@ public class Level {
                  getBlock(x, y).render(screen);
             }
         }
+        for (int i = 0; i < entities.size(); i++) {
+            entities.get(i).render(screen);
+        }
     }
 
     public Block getBlock(int x, int y) {
@@ -102,9 +127,25 @@ public class Level {
         if(block == null){
            block = Resources.AIR;
         }
-        block.setY(y);
-        block.setX(x);
+        block.getPosition().setY(y);
+        block.getPosition().setX(x);
         return block;
+    }
+
+    public void add(Entity e){
+        entities.add(e);
+    }
+
+    public void add(List<Entity> e){
+        entities.addAll(e);
+    }
+
+    public void remove(Entity e){
+        entities.remove(e);
+    }
+
+    public void remove(List<Entity> e){
+        entities.removeAll(e);
     }
 
     public int getWidth() {
@@ -169,5 +210,21 @@ public class Level {
 
     public void setBackground(BufferedImage background) {
         this.background = background;
+    }
+
+    public JsonObject getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(JsonObject metadata) {
+        this.metadata = metadata;
+    }
+
+    public Mouse getMouse() {
+        return mouse;
+    }
+
+    public void setMouse(Mouse mouse) {
+        this.mouse = mouse;
     }
 }

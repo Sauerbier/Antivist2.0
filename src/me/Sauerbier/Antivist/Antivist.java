@@ -51,6 +51,8 @@ public class Antivist extends Canvas implements Runnable{
         level = new Level(new File(Antivist.class.getResource("/levels/the_begin/").getPath()));
         current = level;
         addKeyListener(level.getKeyboard());
+        addMouseListener(level.getMouse());
+        addMouseMotionListener(level.getMouse());
 
     }
 
@@ -114,8 +116,8 @@ public class Antivist extends Canvas implements Runnable{
             return;
         }
         level.getScreen().clear();
-        level.render(level.getClientPlayer().getX() - (WIDTH >> 1) + level.getClientPlayer().getSprite().getSizeX(),
-                level.getClientPlayer().getY() -(HEIGHT >> 1) + level.getClientPlayer().getSprite().getSizeY());
+        level.render(level.getClientPlayer().getPosition().getX() - (WIDTH >> 1) + level.getClientPlayer().getSprite().getSizeX(),
+                level.getClientPlayer().getPosition().getY() -(HEIGHT >> 1) + level.getClientPlayer().getSprite().getSizeY());
         level.getClientPlayer().render(level.getScreen());
 
         for (int i = 0; i < viewPixels.length; i++) {
@@ -126,7 +128,7 @@ public class Antivist extends Canvas implements Runnable{
         {
             //Graphics here :3
             g.drawImage(finalView,0,0,getWidth(),getHeight(),null);
-
+            g.drawString(getLevel().getClientPlayer().getPosition().getX() + "  " + level.getClientPlayer().getPosition().getY(), 80, 80);
         }
 
         g.dispose();
@@ -134,7 +136,8 @@ public class Antivist extends Canvas implements Runnable{
     }
 
     private void tick() {
-        level.update();
+        level.update(level.getClientPlayer().getPosition().getX() - (WIDTH >> 1) + level.getClientPlayer().getSprite().getSizeX(),
+                level.getClientPlayer().getPosition().getY() -(HEIGHT >> 1) + level.getClientPlayer().getSprite().getSizeY());
 
     }
 
@@ -184,5 +187,9 @@ public class Antivist extends Canvas implements Runnable{
 
     public static void setCurrent(Level current) {
         Antivist.current = current;
+    }
+
+    public Level getLevel() {
+        return level;
     }
 }

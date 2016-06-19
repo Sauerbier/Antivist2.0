@@ -23,7 +23,7 @@ import java.util.Map;
  **/
 public class Resources {
 
-    public static Block AIR = new AirBlock("000000",new Sprite(32,32, new Color(0x00ffffff)));
+    public static Block AIR = new AirBlock("000000",new Sprite(32,32, new Color(0x00ffffff)),null);
 
     private HashMap<String,SpriteSheet> spriteSheets = new HashMap<>();
     private HashMap<String,Sprite> sprites = new HashMap<>();
@@ -74,8 +74,14 @@ public class Resources {
             if(sprite.has("class")) {
                 try {
                     Class<? extends Block> blockClass = (Class<? extends Block>) Class.forName(sprite.get("class").getAsString());
-                    Block block = blockClass.getConstructor(String.class, Sprite.class).newInstance(color, sprite1);
-                    blocks[i] = block;
+                    if(sprite.has("metadata")){
+                        Block block = blockClass.getConstructor(String.class, Sprite.class,JsonObject.class).newInstance(color, sprite1, sprite.get("metadata").getAsJsonObject());
+                        blocks[i] = block;
+                    }else{
+                        Block block = blockClass.getConstructor(String.class, Sprite.class,JsonObject.class).newInstance(color, sprite1, null);
+                        blocks[i] = block;
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

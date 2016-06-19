@@ -9,13 +9,18 @@
       "name": "playerSheet",
       "path": "/textures/player_sheet.png",
       "size": 512
+    },
+    {
+      "name": "items",
+      "path": "/textures/item_sheet.png",
+      "size": 512
     }
   ],
   "sprites": [
     {
       "name": "air",
-      "color" : "0",
-      "class" : "me.Sauerbier.Antivist.Level.Tiles.AirBlock",
+      "color": "0",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.AirBlock",
       "sizeX": 32,
       "sizeY": 32,
       "x": 9,
@@ -24,8 +29,8 @@
     },
     {
       "name": "grass_top_left",
-      "color" : "3c280a",
-      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "color": "3c280a",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
       "sizeX": 32,
       "sizeY": 32,
       "x": 0,
@@ -34,8 +39,8 @@
     },
     {
       "name": "grass",
-      "color" : "00ff00",
-      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "color": "00ff00",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
       "sizeX": 32,
       "sizeY": 32,
       "x": 1,
@@ -44,8 +49,8 @@
     },
     {
       "name": "grass_top_right",
-      "color" : "3D2915",
-      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "color": "3D2915",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
       "sizeX": 32,
       "sizeY": 32,
       "x": 2,
@@ -54,8 +59,8 @@
     },
     {
       "name": "Stone",
-      "color" : "808080",
-      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "color": "808080",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
       "sizeX": 32,
       "sizeY": 32,
       "x": 4,
@@ -64,8 +69,26 @@
     },
     {
       "name": "dirt",
-      "color" : "806600",
-      "class" : "me.Sauerbier.Antivist.Level.Tiles.DefaultNonSolidBlock",
+      "color": "806600",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 0,
+      "y": 1,
+      "sheet": "blocks"
+    },
+    {
+      "name": "particlespawner",
+      "color": "777777",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.SpawnerBlock",
+      "metadata":
+      {
+        "type": "PARTICLE",
+        "amountPerSpawn": 30,
+        "totalAmount" : -1,
+        "infinite" : true,
+        "spawnDelay": 10
+      },
       "sizeX": 32,
       "sizeY": 32,
       "x": 0,
@@ -74,7 +97,7 @@
     },
     {
       "name": "player0",
-      "color" : "2",
+      "color": "2",
       "sizeX": 32,
       "sizeY": 64,
       "x": 0,
@@ -83,7 +106,7 @@
     },
     {
       "name": "player1",
-      "color" : "2",
+      "color": "2",
       "sizeX": 32,
       "sizeY": 64,
       "x": 1,
@@ -92,7 +115,7 @@
     },
     {
       "name": "player2",
-      "color" : "2",
+      "color": "2",
       "sizeX": 32,
       "sizeY": 64,
       "x": 4,
@@ -101,7 +124,7 @@
     },
     {
       "name": "player3",
-      "color" : "2",
+      "color": "2",
       "sizeX": 32,
       "sizeY": 64,
       "x": 2,
@@ -110,12 +133,21 @@
     },
     {
       "name": "player4",
-      "color" : "2",
+      "color": "2",
       "sizeX": 32,
       "sizeY": 64,
       "x": 3,
       "y": 0,
       "sheet": "playerSheet"
+    },
+    {
+      "name": "bullet",
+      "color": "0f0f0f",
+      "sizeX": 33,
+      "sizeY": 33,
+      "x": 1,
+      "y": 0,
+      "sheet": "items"
     }
   ]
 }

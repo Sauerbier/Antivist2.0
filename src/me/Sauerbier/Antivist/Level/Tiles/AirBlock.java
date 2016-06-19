@@ -1,5 +1,6 @@
 package me.Sauerbier.Antivist.Level.Tiles;
 
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.Graphics.Sprite;
 import me.Sauerbier.Antivist.Level.Block;
@@ -10,8 +11,10 @@ import me.Sauerbier.Antivist.Level.Block;
  * All rights reserved.
  **/
 public class AirBlock extends Block{
-    public AirBlock(String id, Sprite sprite) {
-        super(id, sprite);
+
+
+    public AirBlock(String id, Sprite sprite, JsonObject metaData) {
+        super(id, sprite, metaData);
     }
 
     @Override

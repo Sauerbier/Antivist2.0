@@ -2,5 +2,6 @@
 
   "name" : "The Begin",
   "playerX" :  19,
-  "playerY" : 17
+  "playerY" : 17,
+  "gravity" : 5
 }

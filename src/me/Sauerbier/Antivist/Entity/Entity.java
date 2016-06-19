@@ -1,5 +1,6 @@
 package me.Sauerbier.Antivist.Entity;
 
+import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.Level.Level;
 
@@ -12,7 +13,7 @@ import java.util.Random;
  **/
 public abstract class Entity {
 
-    private int x,y;
+    private Vector2i position = new Vector2i(0,0);
     private boolean removed = false, gravity=true;
     private Level level;
     private final Random random = new Random();
@@ -24,20 +25,12 @@ public abstract class Entity {
         removed = true;
     }
 
-    public int getX() {
-        return x;
+    public Vector2i getPosition() {
+        return position;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    public void setPosition(Vector2i position) {
+        this.position = position;
     }
 
     public boolean isRemoved() {
