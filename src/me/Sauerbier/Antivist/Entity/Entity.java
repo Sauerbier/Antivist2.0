@@ -1,5 +1,6 @@
 package me.Sauerbier.Antivist.Entity;
 
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.Level.Level;
@@ -17,6 +18,12 @@ public abstract class Entity {
     private boolean removed = false, gravity=true;
     private Level level;
     private final Random random = new Random();
+    private JsonObject metadata;
+
+    public Entity(Level level, JsonObject metadata){
+        this.level = level;
+        this.metadata = metadata;
+    }
 
     public abstract void update();
     public abstract void render(Screen screen);
@@ -59,5 +66,13 @@ public abstract class Entity {
 
     public void setGravity(boolean gravity) {
         this.gravity = gravity;
+    }
+
+    public JsonObject getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(JsonObject metadata) {
+        this.metadata = metadata;
     }
 }

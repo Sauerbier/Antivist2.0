@@ -1,0 +1,51 @@
+{
+
+  "Entities":[
+
+    {
+      "class" : "me.Sauerbier.Antivist.Entity.Entities.Spawner",
+      "spawnX" : 18,
+      "spawnY" : 19,
+      "metadata":
+      {
+        "type": "PARTICLE",
+        "amountPerSpawn": 200,
+        "totalAmount" : -1,
+        "infinite" : true,
+        "spawnDelay": 10,
+        "posX" : 20,
+        "posY" : 19,
+        "particle" :
+        {
+            "sprite" : "null",
+            "life" : 70,
+            "particleSystem":
+            {
+              "class" : "me.Sauerbier.Antivist.Entity.Entities.FireSystem",
+              "startColor" : "0xff0000",
+              "endColor" : "0x0000ff"
+            }
+        }
+      }
+    },
+    {
+      "class" : "me.Sauerbier.Antivist.Entity.Entities.Particle",
+      "spawnX" : 20,
+      "spawnY" : 19,
+      "metadata":
+      {
+        "sprite" : "null",
+        "life" : 200,
+        "particleSystem":
+        {
+          "class" : "me.Sauerbier.Antivist.Entity.Entities.FireSystem",
+          "startColor" : "0xff0000",
+          "endColor" : "0x0000ff"
+        }
+      }
+    }
+
+
+  ]
+
+}

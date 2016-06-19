@@ -3,9 +3,12 @@ package me.Sauerbier.Antivist.ResourceManagement;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import me.Sauerbier.Antivist.Entity.Entity;
+import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Sprite;
 import me.Sauerbier.Antivist.Graphics.SpriteSheet;
 import me.Sauerbier.Antivist.Level.Block;
+import me.Sauerbier.Antivist.Level.Level;
 import me.Sauerbier.Antivist.Level.Tiles.AirBlock;
 
 import java.awt.*;
@@ -23,12 +26,19 @@ import java.util.Map;
  **/
 public class Resources {
 
-    public static Block AIR = new AirBlock("000000",new Sprite(32,32, new Color(0x00ffffff)),null);
+    public static Block AIR ;
 
     private HashMap<String,SpriteSheet> spriteSheets = new HashMap<>();
     private HashMap<String,Sprite> sprites = new HashMap<>();
     //private HashMap<String,Block> blocks = new HashMap<>();
     private Block[] blocks;
+    private Level level;
+
+    public Resources(Level level) {
+        this.level = level;
+       AIR = new AirBlock(level,null);
+        AIR.setSprite(new Sprite(32,32, new Color(0x00ffffff)));
+    }
 
     public void loadSprites(String spritesJson) throws FileNotFoundException {
         Gson gson = new Gson();
@@ -74,18 +84,36 @@ public class Resources {
             if(sprite.has("class")) {
                 try {
                     Class<? extends Block> blockClass = (Class<? extends Block>) Class.forName(sprite.get("class").getAsString());
-                    if(sprite.has("metadata")){
-                        Block block = blockClass.getConstructor(String.class, Sprite.class,JsonObject.class).newInstance(color, sprite1, sprite.get("metadata").getAsJsonObject());
+                    //metadata can be added
+                        Block block = blockClass.getConstructor(Level.class,JsonObject.class).newInstance(level, new JsonObject());
+                        block.setId(color);
+                        block.setSprite(sprite1);
                         blocks[i] = block;
-                    }else{
-                        Block block = blockClass.getConstructor(String.class, Sprite.class,JsonObject.class).newInstance(color, sprite1, null);
-                        blocks[i] = block;
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+
+    public void computeEntites(Level level, JsonArray sprites){
+        for (int i = 0; i < sprites.size(); i++) {
+            JsonObject sprite = sprites.get(i).getAsJsonObject();
+            Vector2i pos = new Vector2i(sprite.get("spawnX").getAsInt(),sprite.get("spawnY").getAsInt());
+            pos.multiply(level.getScreen().getTileSize());
+            Class<? extends Block> entityClass;
+            try {
+                 entityClass = (Class<? extends Block>) Class.forName(sprite.get("class").getAsString());
+                JsonObject metadata = sprite.get("metadata").getAsJsonObject();
+                Entity e = entityClass.getConstructor(Level.class,JsonObject.class).newInstance(level,metadata);
+                e.setPosition(pos);
+                level.add(e);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

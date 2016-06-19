@@ -1,9 +1,12 @@
 package me.Sauerbier.Antivist.Entity.Mobs;
 
-import me.Sauerbier.Antivist.Entity.Projectiles.Projectile;
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Entity.Entity;
+import me.Sauerbier.Antivist.Entity.Projectiles.Projectile;
+import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Sprite;
 import me.Sauerbier.Antivist.Level.Block;
+import me.Sauerbier.Antivist.Level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,10 @@ public abstract class Mob extends Entity {
     private int direction = 0;
     private boolean moving = false, onGround = true;
     private List<Projectile> projectiles = new ArrayList<>();
+
+    public Mob(Level level, JsonObject metadata) {
+        super(level, metadata);
+    }
 
     public abstract void move(int xa, int ya);
 
@@ -42,6 +49,10 @@ public abstract class Mob extends Entity {
     }
 
     public void shoot( Projectile projectile){
+        projectile.getVelocity().multiply(projectile.getSpeed());
+        projectile.setShooter(this);
+        projectile.setSpawn(new Vector2i(getPosition()));
+        projectile.setPosition(new Vector2i(getPosition()));
         getLevel().add(projectile);
         //projectiles.add(projectile);
     }

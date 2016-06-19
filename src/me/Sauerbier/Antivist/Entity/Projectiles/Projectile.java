@@ -1,5 +1,6 @@
 package me.Sauerbier.Antivist.Entity.Projectiles;
 
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Entity.Entity;
 import me.Sauerbier.Antivist.Entity.Mobs.Mob;
 import me.Sauerbier.Antivist.FrameWork.Vector2d;
@@ -21,12 +22,12 @@ public abstract class Projectile extends Entity{
     private Level level;
     private Entity shooter, collided;
 
-    public Projectile(Level level,Entity shooter,Vector2i spawn) {
+    public Projectile(Level level, JsonObject metadata) {
+        super(level, metadata);
+
         this.level = level;
-        this.shooter = shooter;
-        this.spawn = spawn;
-        setPosition(spawn);
     }
+
 
     abstract void damage(Mob mob);
     abstract boolean collision(double x, double y);

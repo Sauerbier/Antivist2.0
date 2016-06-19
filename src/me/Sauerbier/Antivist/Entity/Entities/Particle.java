@@ -1,11 +1,14 @@
 package me.Sauerbier.Antivist.Entity.Entities;
 
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Entity.Entity;
+import me.Sauerbier.Antivist.FrameWork.Utils;
 import me.Sauerbier.Antivist.FrameWork.Vector2d;
-import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.Graphics.Sprite;
 import me.Sauerbier.Antivist.Level.Level;
+
+import java.awt.*;
 
 /**
  * @Author Sauerbier | Jan
@@ -14,34 +17,49 @@ import me.Sauerbier.Antivist.Level.Level;
  **/
 public class Particle extends Entity {
 
-    private Vector2i spawn;
     private Vector2d position,velocity;
     private Sprite sprite;
     private int life;
+    private ParticleSystem system;
 
-    public Particle(Level level,Sprite sprite, Vector2i spawn, int life) {
-        setLevel(level);
-        this.sprite = sprite;
-        this.spawn = spawn;
-        position = new Vector2d(spawn.getX(),spawn.getY());
-        velocity = new Vector2d(Math.sin(getRandom().nextGaussian()),Math.sin(getRandom().nextGaussian()));
-        this.life = life;
-    }
+    public Particle(Level level, JsonObject metadata) {
+        super(level, metadata);
 
-    public Particle(Level level,Sprite sprite, Vector2i spawn, int life, int amount) {
-        this(level,sprite, spawn, life);
+        if(metadata.has("sprite") && !metadata.get("sprite").getAsString().equals("null")){
+            sprite = level.getResources().getSpriteByName(metadata.get("sprite").getAsString());
+        }else{
+            Color color = new Color(getRandom().nextInt(0xffffff));
+            sprite = new Sprite(1,1,color);
+        }
 
-        for (int i = 0; i < amount - 1; i++) {
-            level.add(new Particle(level,sprite, spawn, getRandom().nextInt(life/2) + life));
+        position = new Vector2d(getPosition().getX(),getPosition().getY());
+        velocity = new Vector2d(getRandom().nextGaussian(),getRandom().nextGaussian());
+        life = metadata.get("life").getAsInt();
+        life = Utils.getRandomNumber(life/2,life + life/4);
+
+        if(metadata.has("particleSystem")) {
+            try {
+                Class<? extends ParticleSystem> clazz = (Class<? extends ParticleSystem>) Class.forName(metadata.get("particleSystem").getAsJsonObject().get("class").getAsString());
+                system = clazz.getConstructor(Particle.class, JsonObject.class).newInstance(this, metadata.get("particleSystem").getAsJsonObject());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+          system = new DefaultSystem(this,null);
         }
     }
+
+
+
+
 
     @Override
     public void update() {
         if(life > 0){
-            position.add(velocity);
-            life--;
+            system.calculate();
+            life --;
         }else{
+            remove();
             getLevel().remove(this);
         }
     }
@@ -59,16 +77,10 @@ public class Particle extends Entity {
         this.sprite = sprite;
     }
 
-    public Vector2i getSpawn() {
-        return spawn;
-    }
-
-    public void setSpawn(Vector2i spawn) {
-        this.spawn = spawn;
-    }
 
     public void setPosition(Vector2d position) {
         this.position = position;
+        setPosition(position.toInt());
     }
 
     public int getLife() {
@@ -85,5 +97,17 @@ public class Particle extends Entity {
 
     public void setVelocity(Vector2d velocity) {
         this.velocity = velocity;
+    }
+
+    public ParticleSystem getSystem() {
+        return system;
+    }
+
+    public void setSystem(ParticleSystem system) {
+        this.system = system;
+    }
+
+    public Vector2d getPositionD() {
+        return position;
     }
 }

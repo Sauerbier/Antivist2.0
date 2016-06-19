@@ -52,6 +52,14 @@ public class Sprite {
         }
     }
 
+    public void changeColor(Color color){
+        for(int y = 0; y < sizeY; y++){
+            for(int x = 0; x < sizeX; x++) {
+                pixels[x+y*sizeX] = color.getRGB();
+            }
+        }
+    }
+
     public int getSizeX() {
         return sizeX;
     }

@@ -1,12 +1,14 @@
 package me.Sauerbier.Antivist.Level;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Antivist;
 import me.Sauerbier.Antivist.Entity.Entity;
 import me.Sauerbier.Antivist.Entity.Mobs.Player;
 import me.Sauerbier.Antivist.FrameWork.Keyboard;
 import me.Sauerbier.Antivist.FrameWork.Mouse;
+import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.ResourceManagement.Resources;
 
@@ -43,7 +45,7 @@ public class Level {
     public Level(File levelDir) {
         this.levelDir = levelDir;
         this.name = levelDir.getName();
-        resources = new Resources();
+        resources = new Resources(this);
         keyboard = new Keyboard();
         mouse = new Mouse();
         try {
@@ -53,11 +55,16 @@ public class Level {
         }
         screen = new Screen(resources, Antivist.WIDTH, Antivist.HEIGHT, 128, 32, 5);
         loadLevel();
-        clientPlayer = new Player(this,keyboard,metadata.get("playerX").getAsInt(),metadata.get("playerY").getAsInt());
+        clientPlayer = new Player(this, new JsonObject());
+        Vector2i p = new Vector2i(21,17);
+        p.multiply(getScreen().getTileSize());
+        clientPlayer.setPosition(p);
     }
 
 
     private void loadLevel() {
+        JsonArray entityElements = null;
+
         try {
             level = ImageIO.read(new File(Level.class.getResource("/levels/" + name + "/level.png").getPath()));
             background = ImageIO.read(new File(Level.class.getResource("/levels/" + name + "/background.png").getPath()));
@@ -69,6 +76,9 @@ public class Level {
             Gson gson = new Gson();
             BufferedReader r = new BufferedReader(new FileReader(new File((Level.class.getResource("/levels/" + name + "/MetaData.json").getPath()))));
             metadata = gson.fromJson(r, JsonObject.class);
+            r = new BufferedReader(new FileReader(new File((Level.class.getResource("/levels/" + name + "/Entities.json").getPath()))));
+            JsonObject entities = gson.fromJson(r,JsonObject.class);
+            entityElements = entities.get("Entities").getAsJsonArray();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,19 +91,12 @@ public class Level {
         for (int i = 0; i < tmp.length; i++) {
             tiles[i] = Integer.toHexString(tmp[i]);
         }
+
+        resources.computeEntites(this,entityElements);
     }
 
-    public void update(int xScroll, int yScroll) {
-        int x0 = xScroll >> screen.getTileSizeMask();
-        int x1 = (xScroll + screen.getWidth() + screen.getTileSize()) >> screen.getTileSizeMask();
-        int y0 = yScroll >> screen.getTileSizeMask();
-        int y1 = (yScroll + screen.getHeight()+ screen.getTileSize()) >> screen.getTileSizeMask();
+    public void update() {
 
-        for (int y = y0; y < y1; y++) {
-            for (int x = x0; x < x1; x++) {
-                getBlock(x, y).update();
-            }
-        }
 
         keyboard.update();
         clientPlayer.update();
@@ -105,7 +108,7 @@ public class Level {
 
     public void render(int xScroll, int yScroll) {
         screen.setOffset(xScroll, yScroll);
-        screen.renderBackground(backgroundPixels,background.getWidth(),background.getHeight());
+       // screen.renderBackground(backgroundPixels,background.getWidth(),background.getHeight());
         int x0 = xScroll >> screen.getTileSizeMask();
         int x1 = (xScroll + screen.getWidth() + screen.getTileSize()) >> screen.getTileSizeMask();
         int y0 = yScroll >> screen.getTileSizeMask();

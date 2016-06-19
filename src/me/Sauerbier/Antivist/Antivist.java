@@ -128,6 +128,8 @@ public class Antivist extends Canvas implements Runnable{
         {
             //Graphics here :3
             g.drawImage(finalView,0,0,getWidth(),getHeight(),null);
+            g.setFont(new Font("Ubuntu",Font.BOLD,24));
+            g.setColor(Color.red);
             g.drawString(getLevel().getClientPlayer().getPosition().getX() + "  " + level.getClientPlayer().getPosition().getY(), 80, 80);
         }
 
@@ -136,8 +138,7 @@ public class Antivist extends Canvas implements Runnable{
     }
 
     private void tick() {
-        level.update(level.getClientPlayer().getPosition().getX() - (WIDTH >> 1) + level.getClientPlayer().getSprite().getSizeX(),
-                level.getClientPlayer().getPosition().getY() -(HEIGHT >> 1) + level.getClientPlayer().getSprite().getSizeY());
+        level.update();
 
     }
 

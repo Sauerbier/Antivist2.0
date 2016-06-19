@@ -1,15 +1,16 @@
 package me.Sauerbier.Antivist.Entity.Entities;
 
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Antivist;
 import me.Sauerbier.Antivist.Entity.Entity;
 import me.Sauerbier.Antivist.Entity.EntityType;
 import me.Sauerbier.Antivist.Entity.Mobs.Player;
 import me.Sauerbier.Antivist.Entity.Projectiles.Bullet;
+import me.Sauerbier.Antivist.FrameWork.Vector2d;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Screen;
-import me.Sauerbier.Antivist.Graphics.Sprite;
+import me.Sauerbier.Antivist.Level.Level;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +28,14 @@ public class Spawner extends Entity{
     private List<Entity> entities = new ArrayList<>();
     private boolean infinite;
 
-    public Spawner(Vector2i spawn, EntityType type, int amount, int totalAmount, int spawnDelay, boolean infinite) {
-        this.spawn = spawn;
-        this.type = type;
-        this.amount = amount;
-        this.totalAmount = totalAmount;
-        this.infinite = infinite;
-        this.spawnDelay = spawnDelay;
-        this.delay = spawnDelay;
+    public Spawner(Level level, JsonObject metadata) {
+        super(level, metadata);
+        spawn = new Vector2i(metadata.get("posX").getAsInt(),metadata.get("posY").getAsInt());
+        amount = metadata.get("amountPerSpawn").getAsInt();
+        totalAmount = metadata.get("totalAmount").getAsInt();
+        spawnDelay = metadata.get("spawnDelay").getAsInt();
+        type = EntityType.valueOf(metadata.get("type").getAsString());
+        infinite = metadata.get("infinite").getAsBoolean();
     }
 
 
@@ -46,18 +47,23 @@ public class Spawner extends Entity{
             switch (type) {
                 case PARTICLE:
                     for (int i = 0; i < amount; i++) {
-                        Antivist.getInstance().getLevel().add(new Particle(Antivist.getInstance().getLevel(),
-                                new Sprite(2, 2, new Color(getRandom().nextInt(0xffffff))), spawn, 200));
+                        Particle particle = new Particle(Antivist.getInstance().getLevel(),getMetadata().get("particle").getAsJsonObject());
+                        particle.setPosition(new Vector2i(getPosition()));
+                        particle.setPosition(new Vector2d(getPosition()));
+                        entities.add(particle);
                     }
                     break;
                 case PLAYER:
                     for (int i = 0; i < amount; i++) {
-                        Antivist.getInstance().getLevel().add(new Player(Antivist.getInstance().getLevel(), Antivist.getInstance().getLevel().getKeyboard()));
+                        entities.add(new Player(Antivist.getInstance().getLevel(), new JsonObject()));
                     }
                     break;
                 case BULLET:
+                    JsonObject object = new JsonObject();
+                    object.addProperty("sprite","null");
+                    object.addProperty("life", 200);
                     for (int i = 0; i < amount; i++) {
-                        Antivist.getInstance().getLevel().add(new Bullet(Antivist.getInstance().getLevel(), this, spawn, 1));
+                        Antivist.getInstance().getLevel().add(new Bullet(Antivist.getInstance().getLevel(),object));
                     }
                     break;
             }
@@ -69,6 +75,10 @@ public class Spawner extends Entity{
     public void update() {
             spawn();
         for (int i = 0; i < entities.size(); i++) {
+            if(entities.get(i).isRemoved()){
+                entities.remove(i);
+                continue;
+            }
             entities.get(i).update();
         }
     }

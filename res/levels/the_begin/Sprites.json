@@ -78,24 +78,6 @@
       "sheet": "blocks"
     },
     {
-      "name": "particlespawner",
-      "color": "777777",
-      "class": "me.Sauerbier.Antivist.Level.Tiles.SpawnerBlock",
-      "metadata":
-      {
-        "type": "PARTICLE",
-        "amountPerSpawn": 30,
-        "totalAmount" : -1,
-        "infinite" : true,
-        "spawnDelay": 10
-      },
-      "sizeX": 32,
-      "sizeY": 32,
-      "x": 0,
-      "y": 1,
-      "sheet": "blocks"
-    },
-    {
       "name": "player0",
       "color": "2",
       "sizeX": 32,

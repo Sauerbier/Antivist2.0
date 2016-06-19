@@ -12,14 +12,14 @@ import me.Sauerbier.Antivist.Graphics.Sprite;
 public abstract class Block extends Entity {
 
     private String id;
-    private JsonObject metaData;
+    private JsonObject metadata;
     public Sprite sprite;
 
-    public Block(String id, Sprite sprite, JsonObject metaData) {
-        this.id = id;
-        this.sprite = sprite;
-        this.metaData = metaData;
+    public Block(Level level, JsonObject metadata) {
+        super(level, metadata);
+
     }
+
 
     public abstract boolean isSolid();
 
@@ -41,10 +41,10 @@ public abstract class Block extends Entity {
     }
 
     public JsonObject getMetaData() {
-        return metaData;
+        return metadata;
     }
 
     public void setMetaData(JsonObject metaData) {
-        this.metaData = metaData;
+        this.metadata = metaData;
     }
 }

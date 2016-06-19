@@ -1,5 +1,6 @@
 package me.Sauerbier.Antivist.Entity.Mobs;
 
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Antivist;
 import me.Sauerbier.Antivist.Entity.Projectiles.Bullet;
 import me.Sauerbier.Antivist.FrameWork.Keyboard;
@@ -28,35 +29,20 @@ public class Player extends Mob {
     private boolean walking;
     private int gravity, jumpboost, maxSpeed = 10;
 
-    public Player(Level level, Keyboard keyboard) {
-        this.keyboard = keyboard;
-        setLevel(level);
-        setSprite(getLevel().getResources().getSpriteByName("player0"));
-        idle_left = getLevel().getResources().getSpriteByName("player1");
-        idle_right = getLevel().getResources().getSpriteByName("player2");
-        walk_left = getLevel().getResources().getSpriteByName("player3");
-        walk_right = getLevel().getResources().getSpriteByName("player4");
-        currentSprite = getSprite();
-        animation_left = new AnimatedSprite(idle_left, walk_left);
-        gravity = getLevel().getMetadata().get("gravity").getAsInt();
-        getPosition().setX(0);
-        getPosition().setY(0);
+    public Player(Level level, JsonObject metadata) {
+        super(level, metadata);
+            this.keyboard = level.getKeyboard();
+            setLevel(level);
+            setSprite(getLevel().getResources().getSpriteByName("player0"));
+            idle_left = getLevel().getResources().getSpriteByName("player1");
+            idle_right = getLevel().getResources().getSpriteByName("player2");
+            walk_left = getLevel().getResources().getSpriteByName("player3");
+            walk_right = getLevel().getResources().getSpriteByName("player4");
+            gravity = getLevel().getMetadata().get("gravity").getAsInt();
+            currentSprite = getSprite();
+            animation_left = new AnimatedSprite(idle_left, walk_left);
     }
 
-    public Player(Level level, Keyboard keyboard, int xSpawn, int ySpawn) {
-        this.keyboard = keyboard;
-        setLevel(level);
-        setSprite(getLevel().getResources().getSpriteByName("player0"));
-        idle_left = getLevel().getResources().getSpriteByName("player1");
-        idle_right = getLevel().getResources().getSpriteByName("player2");
-        walk_left = getLevel().getResources().getSpriteByName("player3");
-        walk_right = getLevel().getResources().getSpriteByName("player4");
-        gravity = getLevel().getMetadata().get("gravity").getAsInt();
-        currentSprite = getSprite();
-        animation_left = new AnimatedSprite(idle_left, walk_left);
-        getPosition().setX(xSpawn * level.getScreen().getTileSize());
-        getPosition(). setY(ySpawn * level.getScreen().getTileSize());
-    }
 
     @Override
     public void move(int xa, int ya) {
@@ -111,7 +97,9 @@ public class Player extends Mob {
                 double dx = Mouse.getMouseX() - Antivist.getInstance().getWidth() / 2;
                 double dy = Mouse.getMouseY() - Antivist.getInstance().getHeight() / 2 + 32;
                 double dir = Math.atan2(dy, dx);
-                shoot(new Bullet(getLevel(), this, new Vector2i( getPosition().getX(),  getPosition().getY() + getSprite().getSizeY() / 2), dir));
+                Bullet projectile = new Bullet(getLevel(), new JsonObject());
+                projectile.setVelocity(Vector2i.fromAngle(dir));
+                shoot(projectile);
             }
         }
     }

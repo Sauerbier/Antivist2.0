@@ -13,6 +13,11 @@ public class Vector2d {
         this.y = y;
     }
 
+    public Vector2d(Vector2i vector2i) {
+        x = vector2i.getX();
+        y = vector2i.getY();
+    }
+
     public void add(Vector2i vector2i){
         x += vector2i.getX();
         y += vector2i.getY();
@@ -29,6 +34,11 @@ public class Vector2d {
     }
 
     public void multiply(Vector2i vec){
+        x *= vec.getX();
+        y *= vec.getY();
+    }
+
+    public void multiply(Vector2d vec){
         x *= vec.getX();
         y *= vec.getY();
     }
