@@ -35,7 +35,7 @@ public abstract class Mob extends Entity {
         boolean solid = false;
         for (int i = 0; i < 4; i++) {
             int xt = ((getPosition().getX() + x) + i % 2 * (getSprite().getSizeX() - xOffset)) >> getLevel().getScreen().getTileSizeMask();
-            int yt = ((getPosition().getY() + y) + i / 2 * (getSprite().getSizeY() - yOffset)) >> getLevel().getScreen().getTileSizeMask();
+            int yt = ((getPosition().getY() + y) + (i >> 1) * (getSprite().getSizeY() - yOffset)) >> getLevel().getScreen().getTileSizeMask();
             Block block = getLevel().getBlock(xt, yt);
             if (block.isSolid()){
                 solid = true;
@@ -53,6 +53,7 @@ public abstract class Mob extends Entity {
         projectile.setShooter(this);
         projectile.setSpawn(new Vector2i(getPosition()));
         projectile.setPosition(new Vector2i(getPosition()));
+        projectile.setPositionD(getPosition().toDouble());
         getLevel().add(projectile);
         //projectiles.add(projectile);
     }

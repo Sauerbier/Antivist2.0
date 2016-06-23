@@ -128,9 +128,9 @@ public class Antivist extends Canvas implements Runnable{
         {
             //Graphics here :3
             g.drawImage(finalView,0,0,getWidth(),getHeight(),null);
-            g.setFont(new Font("Ubuntu",Font.BOLD,24));
+          /*  g.setFont(new Font("Ubuntu",Font.BOLD,24));
             g.setColor(Color.red);
-            g.drawString(getLevel().getClientPlayer().getPosition().getX() + "  " + level.getClientPlayer().getPosition().getY(), 80, 80);
+            g.drawString(getLevel().getClientPlayer().getPosition().getX() + "  " + level.getClientPlayer().getPosition().getY(), 80, 80);*/
         }
 
         g.dispose();

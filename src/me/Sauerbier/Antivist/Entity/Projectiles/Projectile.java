@@ -18,13 +18,13 @@ public abstract class Projectile extends Entity{
     private Vector2i spawn;
     private double  speed, fireRate,damage,range;
     private Sprite sprite;
-    private Vector2d velocity;
+    private Vector2d velocity, positionD;
     private Level level;
     private Entity shooter, collided;
 
     public Projectile(Level level, JsonObject metadata) {
         super(level, metadata);
-
+        positionD = new Vector2d(getPosition());
         this.level = level;
     }
 
@@ -132,5 +132,13 @@ public abstract class Projectile extends Entity{
 
     public void setCollided(Entity collided) {
         this.collided = collided;
+    }
+
+    public Vector2d getPositionD() {
+        return positionD;
+    }
+
+    public void setPositionD(Vector2d positionD) {
+        this.positionD = positionD;
     }
 }

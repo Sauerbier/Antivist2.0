@@ -25,7 +25,12 @@ public class FadingSystem extends ParticleSystem {
     @Override
     public void calculate() {
         double ratio = diff / range;
-        getParticle().getPositionD().add(getParticle().getVelocity());
+        if(!collision()) {
+            getParticle().getPositionD().add(getParticle().getVelocity());
+        }else{
+            getParticle().getVelocity().multiply(-1);
+            getParticle().getPositionD().add(getParticle().getVelocity());
+        }
         int red = (int)Math.abs((ratio * start.getRed()) + ((1 - ratio) * end.getRed()));
         int green = (int)Math.abs((ratio * start.getGreen()) + ((1 - ratio) * end.getGreen()));
         int blue = (int)Math.abs((ratio * start.getBlue()) + ((1 - ratio) * end.getBlue()));
@@ -35,4 +40,13 @@ public class FadingSystem extends ParticleSystem {
             diff --;
         else  diff = 0;
     }
+
+    @Override
+    public boolean collision() {
+        if(getParticle().isCollide())
+            return defaultBlockCollision(getParticle().getPositionD().getX(),getParticle().getPositionD().getY(),0,0);
+        else return false;
+        //return false;
+    }
+
 }

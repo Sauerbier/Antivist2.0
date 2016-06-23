@@ -19,6 +19,7 @@
         {
             "sprite" : "null",
             "life" : 70,
+            "collide": false,
             "particleSystem":
             {
               "class" : "me.Sauerbier.Antivist.Entity.Entities.FireSystem",
@@ -30,12 +31,13 @@
     },
     {
       "class" : "me.Sauerbier.Antivist.Entity.Entities.Particle",
-      "spawnX" : 20,
+      "spawnX" : 23,
       "spawnY" : 19,
       "metadata":
       {
         "sprite" : "null",
         "life" : 200,
+        "collide": true,
         "particleSystem":
         {
           "class" : "me.Sauerbier.Antivist.Entity.Entities.FireSystem",

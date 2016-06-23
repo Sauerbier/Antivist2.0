@@ -16,4 +16,11 @@ public class DefaultSystem extends ParticleSystem {
     public void calculate() {
         getParticle().getPositionD().add(getParticle().getVelocity());
     }
+
+    @Override
+    public boolean collision() {
+        if(getParticle().isCollide())
+            return defaultBlockCollision(getParticle().getPositionD().getX(),getParticle().getPositionD().getY(),0,0);
+        else return false;
+    }
 }

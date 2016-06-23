@@ -21,6 +21,7 @@ public class FireSystem extends ParticleSystem {
         this.start = new Color(0x7C0B00);
         this.end = new Color(0xAA9100);
         particle.setVelocity(new Vector2d(particle.getRandom().nextGaussian()/6,particle.getRandom().nextGaussian()/6));
+        particle.setLife(particle.getLife() - 5);
     }
 
     @Override
@@ -33,10 +34,19 @@ public class FireSystem extends ParticleSystem {
         int blue = (int)Math.abs((ratio * start.getBlue()) + ((1 - ratio) * end.getBlue()));
         getParticle().getSprite().changeColor(new Color(red,green,blue));
 
-        if(diff != 0)
-            diff --;
-        else  diff = 0;
+        if(diff != 0) {
+            diff--;
+        } else {
+            diff = 0;
+        }
 
         vel -= 0.001;
+    }
+
+    @Override
+    public boolean collision() {
+        if(getParticle().isCollide())
+            return defaultBlockCollision(getParticle().getPositionD().getX(),getParticle().getPositionD().getY(),0,0);
+        else return false;
     }
 }

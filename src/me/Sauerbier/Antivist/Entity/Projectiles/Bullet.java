@@ -1,11 +1,10 @@
 package me.Sauerbier.Antivist.Entity.Projectiles;
 
 import com.google.gson.JsonObject;
-import me.Sauerbier.Antivist.Entity.Entities.DefaultSystem;
+import me.Sauerbier.Antivist.Entity.Entities.FadingSystem;
 import me.Sauerbier.Antivist.Entity.Entities.Particle;
 import me.Sauerbier.Antivist.Entity.Mobs.Mob;
 import me.Sauerbier.Antivist.FrameWork.Vector2d;
-import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.Level.Level;
 
@@ -38,7 +37,7 @@ public class Bullet extends Projectile {
 
     @Override
     public void update() {
-        if(getPosition().distance(getSpawn()) > getRange()){
+        if(getPositionD().distance(getSpawn()) > getRange()){
             getLevel().remove(this);
             return;
         }
@@ -46,28 +45,31 @@ public class Bullet extends Projectile {
     }
 
     public void move() {
-        if(!collision(getPosition().getX(),getPosition().getY())) {
-           getPosition().add(getVelocity());
+        if(!collision(getPositionD().getX()- (getSprite().getSizeX() >> 1),getPositionD().getY())) {
+           getPositionD().add(getVelocity());
         }else{
-            getLevel().remove(this);
-
             JsonObject object = new JsonObject();
             object.addProperty("sprite","null");
             object.addProperty("life", 200);
+            JsonObject system = new JsonObject();
+            system.addProperty("startColor",getRandom().nextInt(0xffffff));
+            system.addProperty("endColor",getRandom().nextInt(0xffffff));
+            system.addProperty("life", 200);
+            Particle particle = null;
             for (int i = 0; i < 100; i++) {
-                Particle particle = new Particle(getLevel(),object);
-                particle.setSystem(new DefaultSystem(particle, null));
-                particle.setPosition(new Vector2i(getPosition()));
-                particle.setPosition(new Vector2d(getPosition()));
+                 particle = new Particle(getLevel(),object);
+                particle.setSystem(new FadingSystem(particle, system));
+                particle.setPosition(new Vector2d(getPositionD().getX() + (getSprite().getSizeX() >> 1),getPositionD().getY() ));
                 getLevel().add(particle);
 
             }
 
+            getLevel().remove(this);
         }
     }
 
     @Override
     public void render(Screen screen) {
-        screen.renderSprite( getPosition().getX(),getPosition().getY(),getSprite());
+        screen.renderSprite( (int)getPositionD().getX(),(int)getPositionD().getY(),getSprite());
     }
 }

@@ -21,6 +21,7 @@ public class Particle extends Entity {
     private Sprite sprite;
     private int life;
     private ParticleSystem system;
+    private boolean collide;
 
     public Particle(Level level, JsonObject metadata) {
         super(level, metadata);
@@ -31,8 +32,8 @@ public class Particle extends Entity {
             Color color = new Color(getRandom().nextInt(0xffffff));
             sprite = new Sprite(1,1,color);
         }
-
-        position = new Vector2d(getPosition().getX(),getPosition().getY());
+        collide = metadata.get("collide").getAsBoolean();
+        position = new Vector2d(0,0);
         velocity = new Vector2d(getRandom().nextGaussian(),getRandom().nextGaussian());
         life = metadata.get("life").getAsInt();
         life = Utils.getRandomNumber(life/2,life + life/4);
@@ -109,5 +110,9 @@ public class Particle extends Entity {
 
     public Vector2d getPositionD() {
         return position;
+    }
+
+    public boolean isCollide() {
+        return collide;
     }
 }

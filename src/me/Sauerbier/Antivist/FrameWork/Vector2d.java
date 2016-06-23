@@ -33,6 +33,11 @@ public class Vector2d {
         this.y -= vec.getY();
     }
 
+    public void sub(Vector2d vec){
+        this.x -= vec.getX();
+        this.y -= vec.getY();
+    }
+
     public void multiply(Vector2i vec){
         x *= vec.getX();
         y *= vec.getY();
@@ -65,7 +70,7 @@ public class Vector2d {
     public double distance(Vector2i vec){
         double dx = vec.getX() - x;
         double dy = vec.getY() - y;
-        return new Vector2d(dx,dy).lenght();
+        return new Vector2d(dx,dy).length();
     }
 
     public double angle(Vector2i vec){
@@ -77,12 +82,19 @@ public class Vector2d {
     public Vector2i toInt(){
         return new Vector2i((int)x,(int)y);
     }
+    public Vector2i toPixelPrecision(int pixelMask){
+        return new Vector2i((int) x << pixelMask,(int) y << pixelMask);
+    }
+
+    public Vector2i toBlockPrecision(int pixelMask){
+        return new Vector2i((int) x >> pixelMask,(int) y >> pixelMask);
+    }
 
     public static Vector2d fromAngle(double angle){
         return new Vector2d(Math.cos(angle),Math.sin(angle));
     }
 
-    public double lenght(){
+    public double length(){
         return Math.sqrt(x*x + y*y);
     }
 
