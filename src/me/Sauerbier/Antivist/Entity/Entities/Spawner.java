@@ -2,6 +2,7 @@ package me.Sauerbier.Antivist.Entity.Entities;
 
 import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Antivist;
+import me.Sauerbier.Antivist.Entity.Entities.Particle.Particle;
 import me.Sauerbier.Antivist.Entity.Entity;
 import me.Sauerbier.Antivist.Entity.EntityType;
 import me.Sauerbier.Antivist.Entity.Mobs.Player;

@@ -32,7 +32,6 @@ public class Player extends Mob {
     public Player(Level level, JsonObject metadata) {
         super(level, metadata);
             this.keyboard = level.getKeyboard();
-            setLevel(level);
             setSprite(getLevel().getResources().getSpriteByName("player0"));
             idle_left = getLevel().getResources().getSpriteByName("player1");
             idle_right = getLevel().getResources().getSpriteByName("player2");

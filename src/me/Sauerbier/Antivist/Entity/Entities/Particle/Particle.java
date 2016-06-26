@@ -1,4 +1,4 @@
-package me.Sauerbier.Antivist.Entity.Entities;
+package me.Sauerbier.Antivist.Entity.Entities.Particle;
 
 import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Entity.Entity;
@@ -22,7 +22,6 @@ public class Particle extends Entity {
     private int life;
     private ParticleSystem system;
     private boolean collide;
-
     public Particle(Level level, JsonObject metadata) {
         super(level, metadata);
 
@@ -37,7 +36,6 @@ public class Particle extends Entity {
         velocity = new Vector2d(getRandom().nextGaussian(),getRandom().nextGaussian());
         life = metadata.get("life").getAsInt();
         life = Utils.getRandomNumber(life/2,life + life/4);
-
         if(metadata.has("particleSystem")) {
             try {
                 Class<? extends ParticleSystem> clazz = (Class<? extends ParticleSystem>) Class.forName(metadata.get("particleSystem").getAsJsonObject().get("class").getAsString());

@@ -1,8 +1,8 @@
 package me.Sauerbier.Antivist.Entity.Projectiles;
 
 import com.google.gson.JsonObject;
-import me.Sauerbier.Antivist.Entity.Entities.FadingSystem;
-import me.Sauerbier.Antivist.Entity.Entities.Particle;
+import me.Sauerbier.Antivist.Entity.Entities.Particle.FadingSystem;
+import me.Sauerbier.Antivist.Entity.Entities.Particle.Particle;
 import me.Sauerbier.Antivist.Entity.Mobs.Mob;
 import me.Sauerbier.Antivist.FrameWork.Vector2d;
 import me.Sauerbier.Antivist.Graphics.Screen;
@@ -51,6 +51,7 @@ public class Bullet extends Projectile {
             JsonObject object = new JsonObject();
             object.addProperty("sprite","null");
             object.addProperty("life", 200);
+            object.addProperty("collide", true);
             JsonObject system = new JsonObject();
             system.addProperty("startColor",getRandom().nextInt(0xffffff));
             system.addProperty("endColor",getRandom().nextInt(0xffffff));

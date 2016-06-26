@@ -22,6 +22,12 @@ public class SpriteSheet {
         loadSheet();
     }
 
+    public SpriteSheet(BufferedImage image) {
+        pixels = new int[image.getWidth() * image.getHeight()];
+        loadSheetFromImage(image);
+
+    }
+
     private void loadSheet(){
         try {
             BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
@@ -34,6 +40,11 @@ public class SpriteSheet {
         }
     }
 
+    private void loadSheetFromImage(BufferedImage image){
+            int w = image.getWidth();
+            int h = image.getHeight();
+            image.getRGB(0 ,0,w,h,pixels,0,w);
+    }
 
     public String getPath() {
         return path;

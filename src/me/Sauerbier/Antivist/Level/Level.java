@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Antivist;
+import me.Sauerbier.Antivist.Entity.Entities.Light;
 import me.Sauerbier.Antivist.Entity.Entity;
 import me.Sauerbier.Antivist.Entity.Mobs.Player;
 import me.Sauerbier.Antivist.FrameWork.Keyboard;
 import me.Sauerbier.Antivist.FrameWork.Mouse;
+import me.Sauerbier.Antivist.FrameWork.Utils;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.ResourceManagement.Resources;
@@ -41,6 +43,7 @@ public class Level {
     private Mouse mouse;
     private Player clientPlayer;
     private List<Entity> entities = new ArrayList<>();
+    private List<Light> lights = new ArrayList<>();
 
     public Level(File levelDir) {
         this.levelDir = levelDir;
@@ -92,6 +95,9 @@ public class Level {
             tiles[i] = Integer.toHexString(tmp[i]);
         }
 
+        for (int i = 0; i < backgroundPixels.length; i++) {
+            backgroundPixels[i] = Utils.darker(backgroundPixels[i],0.23f);
+        }
         resources.computeEntites(this,entityElements);
     }
 
@@ -108,7 +114,7 @@ public class Level {
 
     public void render(int xScroll, int yScroll) {
         screen.setOffset(xScroll, yScroll);
-       // screen.renderBackground(backgroundPixels,background.getWidth(),background.getHeight());
+        screen.renderBackground(backgroundPixels,background.getWidth(),background.getHeight());
         int x0 = xScroll >> screen.getTileSizeMask();
         int x1 = (xScroll + screen.getWidth() + screen.getTileSize()) >> screen.getTileSizeMask();
         int y0 = yScroll >> screen.getTileSizeMask();
@@ -121,6 +127,10 @@ public class Level {
         }
         for (int i = 0; i < entities.size(); i++) {
             entities.get(i).render(screen);
+        }
+
+        for (int i = 0; i < lights.size(); i++) {
+            lights.get(i).render(screen);
         }
     }
 
@@ -136,6 +146,10 @@ public class Level {
     }
 
     public void add(Entity e){
+        if(e instanceof Light){
+            lights.add((Light) e);
+            System.out.println("added light");
+        }else
         entities.add(e);
     }
 
@@ -144,7 +158,10 @@ public class Level {
     }
 
     public void remove(Entity e){
-        entities.remove(e);
+        if(e instanceof Light){
+            lights.remove( e);
+        }else
+            entities.remove(e);
     }
 
     public void remove(List<Entity> e){
@@ -229,5 +246,9 @@ public class Level {
 
     public void setMouse(Mouse mouse) {
         this.mouse = mouse;
+    }
+
+    public List<Light> getLights() {
+        return lights;
     }
 }

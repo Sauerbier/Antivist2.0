@@ -1,5 +1,7 @@
 package me.Sauerbier.Antivist.Graphics;
 
+import me.Sauerbier.Antivist.Entity.Entities.Light;
+import me.Sauerbier.Antivist.FrameWork.Utils;
 import me.Sauerbier.Antivist.Level.Block;
 import me.Sauerbier.Antivist.ResourceManagement.Resources;
 
@@ -16,7 +18,8 @@ public class Screen {
     public static final int FLIP_Y = 1, FLIP_X = 2, FLIP_BOTH = 3;
     private int width,height, tileSize,tileSizeMask, mapSize, xOffset, yOffset;
     private int[] pixels;
-    private int[] tiles ; //map size
+    private int[] tiles ; //map size;
+    private static int darkPink = Utils.darker(0x00ff00ff,0.23f);
     Random random = new Random();
 
     public Screen(Resources resources, int width, int height, int mapSize, int tileSize, int tileSizeMask) {
@@ -34,7 +37,9 @@ public class Screen {
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
                 int col = pixels[x + y * width];
-                this.pixels[x + y * width] = col;
+                if( col != 0xffff00ff){
+                     this.pixels[x + y * width] = col;
+                }
             }
         }
     }
@@ -59,7 +64,9 @@ public class Screen {
                 if(xa < - block.getSprite().getSizeX() || xa >= width || ya < 0 || ya >= height) break;
                 if(xa < 0 ) xa = 0;
                 int col = block.getSprite().getPixels()[x + y * block.getSprite().getSizeX()];
-                if(col != 0x00ffffff)pixels[xa + ya * width] = col;
+                if( col != 0x00ffffff && col != darkPink &&  col != 0xffff00ff){
+                    this.pixels[xa + ya * width] = col;
+                }
             }
         }
     }
@@ -74,10 +81,31 @@ public class Screen {
                 if(xa < - sprite.getSizeX() || xa >= width || ya < 0 || ya >= height) break;
                 if(xa < 0 ) xa = 0;
                 int col = sprite.getPixels()[x + y * sprite.getSizeX()];
-                if(col != 0x00ffffff && col != 0xffff00ff)pixels[xa + ya * width] = col;
+                if(col != 0x00ffffff && col != 0xffff00ff && col != darkPink)pixels[xa + ya * width] = col;
             }
         }
     }
+
+
+    public void renderLight(int xp, int yp, Light light){
+        xp -= xOffset;
+        yp -= yOffset;
+        for(int y = 0; y < light.getSprite().getSizeY(); y++){
+            int ya = y + yp;
+            for(int x = 0; x < light.getSprite().getSizeX(); x++){
+                int xa = x + xp;
+                if(xa < - light.getSprite().getSizeX() || xa >= width || ya < 0 || ya >= height) break;
+                if(xa < 0 ) xa = 0;
+                int col = light.getSprite().getPixels()[x + y * light.getSprite().getSizeX()];
+                if(col > 0xff000000 && col != 0xffff00ff){
+                    col = Utils.interpolateColor(pixels[xa + ya * width], light.getSprite().getPixels()[x + y * light.getSprite().getSizeX()]);
+                    pixels[xa + ya * width] = col;
+                }
+
+            }
+        }
+    }
+
 
     public void renderReversedSprite(int xp, int yp, Sprite sprite, int flip){
         xp -= xOffset;
@@ -97,7 +125,9 @@ public class Screen {
                 if(xa < - sprite.getSizeX() || xa >= width || ya < 0 || ya >= height) break;
                 if(xa < 0 ) xa = 0;
                 int col = sprite.getPixels()[xs + ys * sprite.getSizeX()];
-                if(col != 0x00ffffff)pixels[xa + ya * width] = col;
+                if( col != 0x00ffffff  && col != darkPink &&  col != 0xffff00ff){
+                     this.pixels[xa + ya * width] = col;
+                }
             }
         }
     }
@@ -161,4 +191,5 @@ public class Screen {
     public void setTileSizeMask(int tileSizeMask) {
         this.tileSizeMask = tileSizeMask;
     }
+
 }

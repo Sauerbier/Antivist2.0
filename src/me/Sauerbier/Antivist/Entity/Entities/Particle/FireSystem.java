@@ -1,4 +1,4 @@
-package me.Sauerbier.Antivist.Entity.Entities;
+package me.Sauerbier.Antivist.Entity.Entities.Particle;
 
 import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.FrameWork.Vector2d;

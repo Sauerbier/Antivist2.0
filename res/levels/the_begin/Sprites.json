@@ -14,6 +14,11 @@
       "name": "items",
       "path": "/textures/item_sheet.png",
       "size": 512
+    },
+    {
+      "name": "fluffy",
+      "path": "/textures/fluffy_sheet.png",
+      "size": 320
     }
   ],
   "sprites": [
@@ -25,6 +30,7 @@
       "sizeY": 32,
       "x": 9,
       "y": 0,
+      "glow": false,
       "sheet": "blocks"
     },
     {
@@ -35,6 +41,7 @@
       "sizeY": 32,
       "x": 0,
       "y": 0,
+      "glow": false,
       "sheet": "blocks"
     },
     {
@@ -45,6 +52,7 @@
       "sizeY": 32,
       "x": 1,
       "y": 0,
+      "glow": false,
       "sheet": "blocks"
     },
     {
@@ -55,6 +63,7 @@
       "sizeY": 32,
       "x": 2,
       "y": 0,
+      "glow": false,
       "sheet": "blocks"
     },
     {
@@ -65,6 +74,7 @@
       "sizeY": 32,
       "x": 4,
       "y": 1,
+      "glow": false,
       "sheet": "blocks"
     },
     {
@@ -75,6 +85,29 @@
       "sizeY": 32,
       "x": 0,
       "y": 1,
+      "glow": false,
+      "sheet": "blocks"
+    },
+    {
+      "name": "lava",
+      "color": "ff0000",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.DefaultSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 1,
+      "y": 4,
+      "glow": true,
+      "sheet": "blocks"
+    },
+    {
+      "name": "torch",
+      "color": "ffff00",
+      "class": "me.Sauerbier.Antivist.Level.Tiles.DefaultNonSolidBlock",
+      "sizeX": 32,
+      "sizeY": 32,
+      "x": 7,
+      "y": 1,
+      "glow": false,
       "sheet": "blocks"
     },
     {
@@ -84,6 +117,7 @@
       "sizeY": 64,
       "x": 0,
       "y": 0,
+      "glow": false,
       "sheet": "playerSheet"
     },
     {
@@ -93,6 +127,7 @@
       "sizeY": 64,
       "x": 1,
       "y": 0,
+      "glow": false,
       "sheet": "playerSheet"
     },
     {
@@ -102,6 +137,7 @@
       "sizeY": 64,
       "x": 4,
       "y": 0,
+      "glow": false,
       "sheet": "playerSheet"
     },
     {
@@ -111,6 +147,7 @@
       "sizeY": 64,
       "x": 2,
       "y": 0,
+      "glow": false,
       "sheet": "playerSheet"
     },
     {
@@ -120,16 +157,26 @@
       "sizeY": 64,
       "x": 3,
       "y": 0,
+      "glow": false,
       "sheet": "playerSheet"
     },
     {
       "name": "bullet",
-      "color": "0f0f0f",
       "sizeX": 33,
       "sizeY": 33,
       "x": 1,
       "y": 0,
+      "glow": false,
       "sheet": "items"
+    },
+    {
+      "name": "fluffy",
+      "sizeX": 64,
+      "sizeY": 64,
+      "x": 0,
+      "y": 0,
+      "glow": false,
+      "sheet": "fluffy"
     }
   ]
 }

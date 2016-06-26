@@ -1,4 +1,4 @@
-package me.Sauerbier.Antivist.Entity.Entities;
+package me.Sauerbier.Antivist.Entity.Entities.Particle;
 
 import com.google.gson.JsonObject;
 
@@ -35,7 +35,6 @@ public class FadingSystem extends ParticleSystem {
         int green = (int)Math.abs((ratio * start.getGreen()) + ((1 - ratio) * end.getGreen()));
         int blue = (int)Math.abs((ratio * start.getBlue()) + ((1 - ratio) * end.getBlue()));
         getParticle().getSprite().changeColor(new Color(red,green,blue));
-
         if(diff != 0)
             diff --;
         else  diff = 0;

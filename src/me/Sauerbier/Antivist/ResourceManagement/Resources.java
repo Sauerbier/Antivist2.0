@@ -77,11 +77,12 @@ public class Resources {
             int y = sprite.get("y").getAsInt();
             int sizeX = sprite.get("sizeX").getAsInt();
             int sizeY = sprite.get("sizeY").getAsInt();
-            String color = sprite.get("color").getAsString();
+            boolean glow = sprite.get("glow").getAsBoolean();
             SpriteSheet sheet = getSheetByName(sprite.get("sheet").getAsString());
-            Sprite sprite1 = new Sprite(sizeX,sizeY,x,y,sheet);
+            Sprite sprite1 = new Sprite(sizeX,sizeY,x,y,sheet,!glow);
             this.sprites.put(name,sprite1);
             if(sprite.has("class")) {
+                String color = sprite.get("color").getAsString();
                 try {
                     Class<? extends Block> blockClass = (Class<? extends Block>) Class.forName(sprite.get("class").getAsString());
                     //metadata can be added

@@ -19,10 +19,10 @@
         {
             "sprite" : "null",
             "life" : 70,
-            "collide": false,
+            "collide": true,
             "particleSystem":
             {
-              "class" : "me.Sauerbier.Antivist.Entity.Entities.FireSystem",
+              "class" : "me.Sauerbier.Antivist.Entity.Entities.Particle.FireSystem",
               "startColor" : "0xff0000",
               "endColor" : "0x0000ff"
             }
@@ -30,7 +30,7 @@
       }
     },
     {
-      "class" : "me.Sauerbier.Antivist.Entity.Entities.Particle",
+      "class" : "me.Sauerbier.Antivist.Entity.Entities.Particle.Particle",
       "spawnX" : 23,
       "spawnY" : 19,
       "metadata":
@@ -40,10 +40,32 @@
         "collide": true,
         "particleSystem":
         {
-          "class" : "me.Sauerbier.Antivist.Entity.Entities.FireSystem",
+          "class" : "me.Sauerbier.Antivist.Entity.Entities.Particle.FireSystem",
           "startColor" : "0xff0000",
           "endColor" : "0x0000ff"
         }
+      }
+    },
+    {
+      "class" : "me.Sauerbier.Antivist.Entity.Mobs.Fluffy",
+      "spawnX" : 23,
+      "spawnY" : 17,
+      "metadata":
+      {
+        "sprite" : "fluffy"
+      }
+    },
+    {
+      "class" : "me.Sauerbier.Antivist.Entity.Entities.Light",
+      "spawnX" : 24,
+      "spawnY" : 17,
+      "metadata":
+      {
+        "color" : "0xffffff",
+        "dynamic" : true,
+        "radius" : 20,
+        "luminosity" : 0.6,
+        "angle" : 9001
       }
     }
 
