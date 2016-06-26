@@ -37,7 +37,7 @@ public class Bullet extends Projectile {
 
     @Override
     public void update() {
-        if(getPositionD().distance(getSpawn()) > getRange()){
+        if(getPosition().distance(getSpawn()) > getRange()){
             getLevel().remove(this);
             return;
         }
@@ -45,8 +45,8 @@ public class Bullet extends Projectile {
     }
 
     public void move() {
-        if(!collision(getPositionD().getX()- (getSprite().getSizeX() >> 1),getPositionD().getY())) {
-           getPositionD().add(getVelocity());
+        if(!collision(getPosition().getX()- (getSprite().getSizeX() >> 1),getPosition().getY())) {
+           getPosition().add(getVelocity());
         }else{
             JsonObject object = new JsonObject();
             object.addProperty("sprite","null");
@@ -60,7 +60,7 @@ public class Bullet extends Projectile {
             for (int i = 0; i < 100; i++) {
                  particle = new Particle(getLevel(),object);
                 particle.setSystem(new FadingSystem(particle, system));
-                particle.setPosition(new Vector2d(getPositionD().getX() + (getSprite().getSizeX() >> 1),getPositionD().getY() ));
+                particle.setPosition(new Vector2d(getPosition().getX() + (getSprite().getSizeX() >> 1),getPosition().getY() ));
                 getLevel().add(particle);
 
             }
@@ -71,6 +71,6 @@ public class Bullet extends Projectile {
 
     @Override
     public void render(Screen screen) {
-        screen.renderSprite( (int)getPositionD().getX(),(int)getPositionD().getY(),getSprite());
+        screen.renderSprite( (int)getPosition().getX(),(int)getPosition().getY(),getSprite());
     }
 }

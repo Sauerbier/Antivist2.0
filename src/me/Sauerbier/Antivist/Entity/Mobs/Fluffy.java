@@ -67,12 +67,12 @@ public class Fluffy extends Mob {
             setMoving(true);
 
         int mask = getLevel().getScreen().getTileSizeMask();
-        setOnGround(getLevel().getBlock(getPosition().getX() << mask,(getPosition().getY() << mask) + 1).isSolid());
+        setOnGround(getLevel().getBlock((int)getPosition().getX() << mask,((int)getPosition().getY() << mask) + 1).isSolid());
 
     }
 
     @Override
     public void render(Screen screen) {
-        screen.renderSprite( getPosition().getX(),  getPosition().getY(), getSprite());
+        screen.renderSprite((int) getPosition().getX(), (int) getPosition().getY(), getSprite());
     }
 }

@@ -21,16 +21,19 @@ public class Player extends Mob {
     //TODO should be moved to the gun item
     public static int FIRERATE = 3;
 
-
+    private String name;
     private Keyboard keyboard;
     private Sprite idle_left, idle_right, walk_left, walk_right, currentSprite;
     private AnimatedSprite animation_left;
     private int speed = 4;
     private boolean walking;
-    private int gravity, jumpboost, maxSpeed = 10;
+    private int gravity, maxSpeed = 10;
+    private float jumpboost;
+    private double energy = 1, mana = 1;
 
     public Player(Level level, JsonObject metadata) {
         super(level, metadata);
+            name = metadata.get("name").getAsString();
             this.keyboard = level.getKeyboard();
             setSprite(getLevel().getResources().getSpriteByName("player0"));
             idle_left = getLevel().getResources().getSpriteByName("player1");
@@ -40,14 +43,21 @@ public class Player extends Mob {
             gravity = getLevel().getMetadata().get("gravity").getAsInt();
             currentSprite = getSprite();
             animation_left = new AnimatedSprite(idle_left, walk_left);
+
     }
 
 
     @Override
     public void move(int xa, int ya) {
         if (xa != 0 && ya != 0) {
-            move(0, ya);
-            move(xa, 0);
+            if(energy > 0){
+                move(0, ya);
+                move(xa, 0);
+            }else{
+                move(0, ya/2);
+                move(xa/2, 0);
+            }
+
             return;
         }
 
@@ -73,7 +83,7 @@ public class Player extends Mob {
         animation_left.update();
         int xa = 0, ya = 0;
         if (isOnGround() && keyboard.isJump()) {
-            jumpboost = -gravity * speed + gravity;
+            jumpboost = -gravity * speed + gravity*1.5f;
             setOnGround(false);
         }
 
@@ -83,22 +93,47 @@ public class Player extends Mob {
 
         if (keyboard.isLeft()) xa -= speed;
         if (keyboard.isRight()) xa += speed;
+
+        if(keyboard.isRight() || keyboard.isLeft() || keyboard.isJump()){
+            walking = true;
+            if(energy > 0){
+                energy -= 0.001;
+                if(energy < 0 ) energy = 0;
+            }
+        }else{
+            walking = false;
+            if(energy < 1){
+                energy += 0.0005;
+                if(energy > 1) energy = 1;
+            }
+        }
+
         if (xa != 0 || ya != 0) {
             move(xa, ya);
-            walking = true;
-        } else walking = false;
+        }
 
         if(FIRERATE > 0 ) {
             FIRERATE--;
         }else{
             FIRERATE = 3;
             if (Mouse.getMouseButton() == 1) {
-                double dx = Mouse.getMouseX() - Antivist.getInstance().getWidth() / 2;
-                double dy = Mouse.getMouseY() - Antivist.getInstance().getHeight() / 2 + 32;
-                double dir = Math.atan2(dy, dx);
-                Bullet projectile = new Bullet(getLevel(), new JsonObject());
-                projectile.setVelocity(Vector2i.fromAngle(dir));
-                shoot(projectile);
+                if(mana > 0) {
+                    double dx = Mouse.getMouseX() - Antivist.getInstance().getWidth() / 2;
+                    double dy = Mouse.getMouseY() - Antivist.getInstance().getHeight() / 2 + 32;
+                    double dir = Math.atan2(dy, dx);
+                    Bullet projectile = new Bullet(getLevel(), new JsonObject());
+                    projectile.setVelocity(Vector2i.fromAngle(dir));
+                    shoot(projectile);
+                    if (mana > 0) {
+                        mana -= 0.01;
+                        if (mana < 0) mana = 0;
+                    }
+                }
+            }else{
+                if(mana < 1){
+                    mana += 0.0025;
+                    if(mana > 1 ) mana = 1;
+                }
             }
         }
     }
@@ -106,14 +141,14 @@ public class Player extends Mob {
     @Override
     public void render(Screen screen) {
         if (!walking) {
-            screen.renderSprite( getPosition().getX(),  getPosition().getY(), getSprite());
+            screen.renderSprite((int) getPosition().getX(),(int)  getPosition().getY(), getSprite());
             return;
         }
-        if (getDirection() == 0) screen.renderSprite( getPosition().getX(),  getPosition().getY(), getSprite());
-        if (getDirection() == 1) screen.renderSprite( getPosition().getX(),  getPosition().getY(), animation_left.getCurrentFrame());
+        if (getDirection() == 0) screen.renderSprite((int) getPosition().getX(),(int)  getPosition().getY(), getSprite());
+        if (getDirection() == 1) screen.renderSprite((int) getPosition().getX(), (int) getPosition().getY(), animation_left.getCurrentFrame());
         if (getDirection() == 3)
-            screen.renderReversedSprite( getPosition().getX(),  getPosition().getY(), animation_left.getCurrentFrame(), Screen.FLIP_Y);
-        if (getDirection() == 2) screen.renderSprite( getPosition().getX(),  getPosition().getY(), getSprite());
+            screen.renderReversedSprite((int) getPosition().getX(), (int) getPosition().getY(), animation_left.getCurrentFrame(), Screen.FLIP_Y);
+        if (getDirection() == 2) screen.renderSprite((int) getPosition().getX(),(int)  getPosition().getY(), getSprite());
 
 
     }
@@ -175,5 +210,29 @@ public class Player extends Mob {
 
     public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(double energy) {
+        this.energy = energy;
+    }
+
+    public double getMana() {
+        return mana;
+    }
+
+    public void setMana(double mana) {
+        this.mana = mana;
     }
 }

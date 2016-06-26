@@ -5,7 +5,7 @@ package me.Sauerbier.Antivist.FrameWork;
  * @Copyright 2016 by Jan Hof
  * All rights reserved.
  **/
-public class Vector2i {
+public class Vector2i implements Cloneable{
 
     private int x,y;
 
@@ -23,6 +23,7 @@ public class Vector2i {
         x += vector2i.getX();
         y += vector2i.getY();
     }
+
 
     public void add(Vector2d vector2i){
         x += vector2i.getX();
@@ -90,6 +91,16 @@ public class Vector2i {
 
     public double length(){
         return Math.sqrt(x*x + y*y);
+    }
+
+    @Override
+    public Vector2i clone() {
+        try {
+            return (Vector2i) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public int getX() {

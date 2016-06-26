@@ -17,7 +17,7 @@ import java.awt.*;
  **/
 public class Particle extends Entity {
 
-    private Vector2d position,velocity;
+    private Vector2d velocity;
     private Sprite sprite;
     private int life;
     private ParticleSystem system;
@@ -31,8 +31,7 @@ public class Particle extends Entity {
             Color color = new Color(getRandom().nextInt(0xffffff));
             sprite = new Sprite(1,1,color);
         }
-        collide = metadata.get("collide").getAsBoolean();
-        position = new Vector2d(0,0);
+        collide = metadata.get("collide").getAsBoolean();;
         velocity = new Vector2d(getRandom().nextGaussian(),getRandom().nextGaussian());
         life = metadata.get("life").getAsInt();
         life = Utils.getRandomNumber(life/2,life + life/4);
@@ -65,7 +64,7 @@ public class Particle extends Entity {
 
     @Override
     public void render(Screen screen) {
-        screen.renderSprite((int)position.getX(),(int)position.getY(),sprite);
+        screen.renderSprite((int)getPosition().getX(),(int)getPosition().getY(),sprite);
     }
 
     public Sprite getSprite() {
@@ -74,12 +73,6 @@ public class Particle extends Entity {
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
-    }
-
-
-    public void setPosition(Vector2d position) {
-        this.position = position;
-        setPosition(position.toInt());
     }
 
     public int getLife() {
@@ -104,10 +97,6 @@ public class Particle extends Entity {
 
     public void setSystem(ParticleSystem system) {
         this.system = system;
-    }
-
-    public Vector2d getPositionD() {
-        return position;
     }
 
     public boolean isCollide() {

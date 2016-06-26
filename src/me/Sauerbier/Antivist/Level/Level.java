@@ -10,7 +10,7 @@ import me.Sauerbier.Antivist.Entity.Mobs.Player;
 import me.Sauerbier.Antivist.FrameWork.Keyboard;
 import me.Sauerbier.Antivist.FrameWork.Mouse;
 import me.Sauerbier.Antivist.FrameWork.Utils;
-import me.Sauerbier.Antivist.FrameWork.Vector2i;
+import me.Sauerbier.Antivist.FrameWork.Vector2d;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.ResourceManagement.Resources;
 
@@ -58,8 +58,10 @@ public class Level {
         }
         screen = new Screen(resources, Antivist.WIDTH, Antivist.HEIGHT, 128, 32, 5);
         loadLevel();
-        clientPlayer = new Player(this, new JsonObject());
-        Vector2i p = new Vector2i(21,17);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name","Sauerbier");
+        clientPlayer = new Player(this, jsonObject);
+        Vector2d p = new Vector2d(21,17);
         p.multiply(getScreen().getTileSize());
         clientPlayer.setPosition(p);
     }
@@ -129,6 +131,8 @@ public class Level {
             entities.get(i).render(screen);
         }
 
+        clientPlayer.render(screen);
+
         for (int i = 0; i < lights.size(); i++) {
             lights.get(i).render(screen);
         }
@@ -148,7 +152,6 @@ public class Level {
     public void add(Entity e){
         if(e instanceof Light){
             lights.add((Light) e);
-            System.out.println("added light");
         }else
         entities.add(e);
     }

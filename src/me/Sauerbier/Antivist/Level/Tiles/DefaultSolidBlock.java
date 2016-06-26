@@ -29,6 +29,6 @@ public class DefaultSolidBlock extends Block {
 
     @Override
     public void render(Screen screen) {
-        screen.renderBlocks(this,  getPosition().getX() << screen.getTileSizeMask(),  getPosition().getY() << screen.getTileSizeMask());
+        screen.renderBlocks(this, (int) getPosition().getX() << screen.getTileSizeMask(), (int) getPosition().getY() << screen.getTileSizeMask());
     }
 }

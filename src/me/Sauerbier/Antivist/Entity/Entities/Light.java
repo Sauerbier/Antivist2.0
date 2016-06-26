@@ -82,9 +82,9 @@ public class Light extends Entity implements Cloneable{
     @Override
     public void render(Screen screen) {
         if(!dynamic){
-            screen.renderLight(getPosition().getX() << screen.getTileSizeMask(),getPosition().getY() << screen.getTileSizeMask(),this);
+            screen.renderLight((int)getPosition().getX() << screen.getTileSizeMask(),(int)getPosition().getY() << screen.getTileSizeMask(),this);
         }else{
-            screen.renderLight(getPosition().getX(),getPosition().getY() ,this);
+            screen.renderLight((int)getPosition().getX(),(int)getPosition().getY() ,this);
         }
     }
 

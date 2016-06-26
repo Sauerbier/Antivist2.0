@@ -7,7 +7,6 @@ import me.Sauerbier.Antivist.ResourceManagement.Resources;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 /**
  * @Author Sauerbier | Jan
@@ -18,9 +17,7 @@ public class Screen {
     public static final int FLIP_Y = 1, FLIP_X = 2, FLIP_BOTH = 3;
     private int width,height, tileSize,tileSizeMask, mapSize, xOffset, yOffset;
     private int[] pixels;
-    private int[] tiles ; //map size;
     private static int darkPink = Utils.darker(0x00ff00ff,0.23f);
-    Random random = new Random();
 
     public Screen(Resources resources, int width, int height, int mapSize, int tileSize, int tileSizeMask) {
         this.width = width;
@@ -29,8 +26,6 @@ public class Screen {
         this.tileSizeMask = tileSizeMask;
         this.mapSize = mapSize;
         pixels = new int[width*height];
-        tiles = new int[mapSize*mapSize];
-
     }
 
     public void renderBackground(int[] pixels, int width, int height){
@@ -131,6 +126,29 @@ public class Screen {
             }
         }
     }
+
+
+    public void drawRect(int xp, int yp, int width, int height, int color, boolean fix){
+        if(!fix){
+            xp -= xOffset;
+            yp -= yOffset;
+        }
+        for (int x = xp; x < xp + width; x ++){
+            if(x < 0 || x >= this.getWidth() || yp >= this.getHeight()) continue;
+            if(yp > 0 )pixels[ x + yp*this.getWidth()] = color;
+            if(yp + height >= this.getHeight()) continue;
+            if(yp + height> 0 )pixels[ x + (yp+height)*this.getWidth()] = color;
+        }
+
+
+        for (int y = yp; y <= yp + height; y ++){
+            if(xp >= this.getWidth() || y < 0 || y >= this.getHeight()) continue;
+            if(xp > 0)pixels[xp + y  *this.getWidth()] = color;
+            if(xp + width >= this.getWidth()) continue;
+            if(xp +width > 0)pixels[(xp+width) + y  *this.getWidth()] = color;
+        }
+    }
+
 
     public void setOffset(int xOffset, int yOffset){
         this.xOffset = xOffset;

@@ -4,8 +4,8 @@
 
     {
       "class" : "me.Sauerbier.Antivist.Entity.Entities.Spawner",
-      "spawnX" : 18,
-      "spawnY" : 19,
+      "spawnX" : 18.5,
+      "spawnY" : 18.1,
       "metadata":
       {
         "type": "PARTICLE",
@@ -57,14 +57,27 @@
     },
     {
       "class" : "me.Sauerbier.Antivist.Entity.Entities.Light",
-      "spawnX" : 24,
-      "spawnY" : 17,
+      "spawnX" : 15.5,
+      "spawnY" : 14.3,
       "metadata":
       {
-        "color" : "0xffffff",
+        "color" : "0xec9000",
         "dynamic" : true,
-        "radius" : 20,
-        "luminosity" : 0.6,
+        "radius" : 100,
+        "luminosity" : 0.2,
+        "angle" : 9001
+      }
+    },
+    {
+      "class" : "me.Sauerbier.Antivist.Entity.Entities.Light",
+      "spawnX" : 17.3,
+      "spawnY" : 16.9,
+      "metadata":
+      {
+        "color" : "0x932b0a",
+        "dynamic" : true,
+        "radius" : 40,
+        "luminosity" : 0.3,
         "angle" : 9001
       }
     }

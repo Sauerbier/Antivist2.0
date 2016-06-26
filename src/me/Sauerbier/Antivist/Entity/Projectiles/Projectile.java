@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Entity.Entity;
 import me.Sauerbier.Antivist.Entity.Mobs.Mob;
 import me.Sauerbier.Antivist.FrameWork.Vector2d;
-import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.Sprite;
 import me.Sauerbier.Antivist.Level.Block;
 import me.Sauerbier.Antivist.Level.Level;
@@ -15,17 +14,17 @@ import me.Sauerbier.Antivist.Level.Level;
  * All rights reserved.
  **/
 public abstract class Projectile extends Entity{
-    private Vector2i spawn;
+    private Vector2d spawn;
     private double  speed, fireRate,damage,range;
     private Sprite sprite;
-    private Vector2d velocity, positionD;
+    private Vector2d velocity;
     private Level level;
     private Entity shooter, collided;
 
     public Projectile(Level level, JsonObject metadata) {
         super(level, metadata);
-        positionD = new Vector2d(getPosition());
         this.level = level;
+        spawn = (Vector2d) getPosition().clone();
     }
 
 
@@ -50,11 +49,11 @@ public abstract class Projectile extends Entity{
 
 
 
-    public Vector2i getSpawn() {
+    public Vector2d getSpawn() {
         return spawn;
     }
 
-    public void setSpawn(Vector2i spawn) {
+    public void setSpawn(Vector2d spawn) {
         this.spawn = spawn;
     }
 
@@ -134,11 +133,4 @@ public abstract class Projectile extends Entity{
         this.collided = collided;
     }
 
-    public Vector2d getPositionD() {
-        return positionD;
-    }
-
-    public void setPositionD(Vector2d positionD) {
-        this.positionD = positionD;
-    }
 }

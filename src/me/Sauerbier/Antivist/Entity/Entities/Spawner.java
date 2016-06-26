@@ -49,8 +49,7 @@ public class Spawner extends Entity{
                 case PARTICLE:
                     for (int i = 0; i < amount; i++) {
                         Particle particle = new Particle(Antivist.getInstance().getLevel(),getMetadata().get("particle").getAsJsonObject());
-                        particle.setPosition(new Vector2i(getPosition()));
-                        particle.setPosition(new Vector2d(getPosition()));
+                        particle.setPosition((Vector2d) getPosition().clone());
                         entities.add(particle);
                     }
                     break;

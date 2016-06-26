@@ -1,7 +1,7 @@
 package me.Sauerbier.Antivist.Entity;
 
 import com.google.gson.JsonObject;
-import me.Sauerbier.Antivist.FrameWork.Vector2i;
+import me.Sauerbier.Antivist.FrameWork.Vector2d;
 import me.Sauerbier.Antivist.Graphics.Screen;
 import me.Sauerbier.Antivist.Level.Level;
 
@@ -14,7 +14,7 @@ import java.util.Random;
  **/
 public abstract class Entity {
 
-    private Vector2i position = new Vector2i(0,0);
+    private Vector2d position = new Vector2d(0,0);
     private boolean removed = false, gravity=true;
     private Level level;
     private final Random random = new Random();
@@ -32,11 +32,11 @@ public abstract class Entity {
         removed = true;
     }
 
-    public Vector2i getPosition() {
+    public Vector2d getPosition() {
         return position;
     }
 
-    public void setPosition(Vector2i position) {
+    public void setPosition(Vector2d position) {
         this.position = position;
     }
 

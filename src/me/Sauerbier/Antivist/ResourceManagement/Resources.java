@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Entity.Entity;
-import me.Sauerbier.Antivist.FrameWork.Vector2i;
+import me.Sauerbier.Antivist.FrameWork.Vector2d;
 import me.Sauerbier.Antivist.Graphics.Sprite;
 import me.Sauerbier.Antivist.Graphics.SpriteSheet;
 import me.Sauerbier.Antivist.Level.Block;
@@ -102,7 +102,7 @@ public class Resources {
     public void computeEntites(Level level, JsonArray sprites){
         for (int i = 0; i < sprites.size(); i++) {
             JsonObject sprite = sprites.get(i).getAsJsonObject();
-            Vector2i pos = new Vector2i(sprite.get("spawnX").getAsInt(),sprite.get("spawnY").getAsInt());
+            Vector2d pos = new Vector2d(sprite.get("spawnX").getAsDouble(),sprite.get("spawnY").getAsDouble());
             pos.multiply(level.getScreen().getTileSize());
             Class<? extends Block> entityClass;
             try {

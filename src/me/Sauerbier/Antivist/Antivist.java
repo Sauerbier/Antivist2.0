@@ -1,5 +1,7 @@
 package me.Sauerbier.Antivist;
 
+import me.Sauerbier.Antivist.Graphics.PlayerUI;
+import me.Sauerbier.Antivist.Graphics.UI.UIManager;
 import me.Sauerbier.Antivist.Level.Level;
 
 import javax.swing.*;
@@ -18,14 +20,16 @@ public class Antivist extends Canvas implements Runnable{
 
     private static Antivist instance;
     private static Level current;
-    public static int WIDTH = 500, HEIGHT = WIDTH / 16*9, SCALE = 3;
+    public static int WIDTH = 384, HEIGHT = WIDTH / 16*9, SCALE = 4;
 
     private Thread thread;
     private boolean running;
     private JFrame frame;
 
     private Level level;
-    private BufferedImage finalView = new BufferedImage(WIDTH,HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private PlayerUI ui;
+    private UIManager uiManager;
+    private BufferedImage finalView = new BufferedImage(WIDTH ,HEIGHT, BufferedImage.TYPE_INT_RGB);
     private int[] viewPixels = ((DataBufferInt)finalView.getRaster().getDataBuffer()).getData();
 
     public static void main(String[] args){
@@ -49,13 +53,14 @@ public class Antivist extends Canvas implements Runnable{
 
         frame = new JFrame();
         level = new Level(new File(Antivist.class.getResource("/levels/the_begin/").getPath()));
+        uiManager = new UIManager();
+        ui = new PlayerUI(level.getClientPlayer());
         current = level;
         addKeyListener(level.getKeyboard());
         addMouseListener(level.getMouse());
         addMouseMotionListener(level.getMouse());
 
-
-
+        uiManager.addPanel(ui.panel);
     }
 
 
@@ -113,14 +118,14 @@ public class Antivist extends Canvas implements Runnable{
     private void render() {
         BufferStrategy bs = getBufferStrategy();
         if(bs == null){
-            //TODO check if this is good for fps later on...
-            createBufferStrategy(1);
+            createBufferStrategy(2);
             return;
         }
         level.getScreen().clear();
-        level.render(level.getClientPlayer().getPosition().getX() - (WIDTH >> 1) + level.getClientPlayer().getSprite().getSizeX(),
-                level.getClientPlayer().getPosition().getY() -(HEIGHT >> 1) + level.getClientPlayer().getSprite().getSizeY());
-        level.getClientPlayer().render(level.getScreen());
+        level.render((int)level.getClientPlayer().getPosition().getX() - (WIDTH >> 1) + (level.getClientPlayer().getSprite().getSizeX() >> 1),
+                (int)level.getClientPlayer().getPosition().getY() -(HEIGHT >> 1) + (level.getClientPlayer().getSprite().getSizeY() >> 1));
+
+
 
         for (int i = 0; i < viewPixels.length; i++) {
             viewPixels[i] = level.getScreen().getPixels()[i];
@@ -130,9 +135,7 @@ public class Antivist extends Canvas implements Runnable{
         {
             //Graphics here :3
             g.drawImage(finalView,0,0,getWidth(),getHeight(),null);
-          /*  g.setFont(new Font("Ubuntu",Font.BOLD,24));
-            g.setColor(Color.red);
-            g.drawString(getLevel().getClientPlayer().getPosition().getX() + "  " + level.getClientPlayer().getPosition().getY(), 80, 80);*/
+            uiManager.render(g);
         }
 
         g.dispose();
@@ -141,7 +144,8 @@ public class Antivist extends Canvas implements Runnable{
 
     private void tick() {
         level.update();
-
+        ui.update();
+        uiManager.update();
     }
 
     public JFrame getFrame() {

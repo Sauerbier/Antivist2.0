@@ -17,6 +17,7 @@ public class Utils {
 
 
     public static int interpolateColor(int ca, int cb) {
+        if(cb <= 0x0) return ca;
         int r = (ca >> 16) & 0x000000ff;
         int g = (ca >> 8) & 0x000000ff; //m
         int b = ca & 0x000000ff;
@@ -31,6 +32,7 @@ public class Utils {
         if(or > 255) or = 255;
         if(og > 255) og = 255;
         if(ob > 255) ob = 255;
+       // return darker((or << 16 | og << 8 | ob),1.05f);
         return (or << 16 | og << 8 | ob);
 
     }
@@ -44,6 +46,7 @@ public class Utils {
         b = (int) (b * f);
         return (r << 16 | g << 8 | b);
     }
+
 
 
     public static int subColor(int ca, int cb) {
