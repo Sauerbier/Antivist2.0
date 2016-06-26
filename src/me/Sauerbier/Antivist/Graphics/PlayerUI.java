@@ -3,10 +3,7 @@ package me.Sauerbier.Antivist.Graphics;
 import me.Sauerbier.Antivist.Antivist;
 import me.Sauerbier.Antivist.Entity.Mobs.Player;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
-import me.Sauerbier.Antivist.Graphics.UI.UILabel;
-import me.Sauerbier.Antivist.Graphics.UI.UIManager;
-import me.Sauerbier.Antivist.Graphics.UI.UIPanel;
-import me.Sauerbier.Antivist.Graphics.UI.UIProgressBar;
+import me.Sauerbier.Antivist.Graphics.UI.*;
 
 import java.awt.*;
 
@@ -44,6 +41,7 @@ public class PlayerUI {
         panel.add(manaBar);
         manaBar.add(mana);
         manaBar.setProgress(0.3);
+        manaBar.blink(true,0.3,Color.red);
 
         energyBar = new UIProgressBar(new Vector2i(5,70),new Vector2i(panel.getSize().getX()-10,15),new Color(200,150,0));
         UILabel energy = new UILabel("Energy",new Font("Ubuntu",Font.PLAIN,14),new Vector2i(5,12),Color.white);
@@ -51,6 +49,20 @@ public class PlayerUI {
         energyBar.add(energy);
         energyBar.setProgress(0.8);
         energyBar.blink(true,0.3,Color.red);
+
+        UIButton button = new UIButton("Test Button",new Vector2i(5,90),new Vector2i(85,20),Color.blue,Color.white);
+        button.setEvent(new UIButtonEvent() {
+            @Override
+            public void mouseEnter(UIButton button) {
+                button.setColor(new Color(107, 107, 255));
+            }
+
+            @Override
+            public void mouseLeave(UIButton button) {
+                button.setColor(Color.blue);
+            }
+        });
+        panel.add(button);
 
     }
 
