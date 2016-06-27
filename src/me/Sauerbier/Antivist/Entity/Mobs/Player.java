@@ -5,6 +5,7 @@ import me.Sauerbier.Antivist.Antivist;
 import me.Sauerbier.Antivist.Entity.Projectiles.Bullet;
 import me.Sauerbier.Antivist.FrameWork.Keyboard;
 import me.Sauerbier.Antivist.FrameWork.Mouse;
+import me.Sauerbier.Antivist.FrameWork.MouseCallBack;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.AnimatedSprite;
 import me.Sauerbier.Antivist.Graphics.Screen;
@@ -19,7 +20,7 @@ import me.Sauerbier.Antivist.Level.Level;
 public class Player extends Mob {
 
     //TODO should be moved to the gun item
-    public static int FIRERATE = 3;
+    public static int FIRERATE = 5;
 
     private String name;
     private Keyboard keyboard;
@@ -30,7 +31,7 @@ public class Player extends Mob {
     private int gravity, maxSpeed = 10;
     private float jumpboost;
     private double energy = 1, mana = 1;
-
+    private MouseCallBack mouseCallBack;
     public Player(Level level, JsonObject metadata) {
         super(level, metadata);
             name = metadata.get("name").getAsString();
@@ -43,7 +44,34 @@ public class Player extends Mob {
             gravity = getLevel().getMetadata().get("gravity").getAsInt();
             currentSprite = getSprite();
             animation_left = new AnimatedSprite(idle_left, walk_left);
+            mouseCallBack = new MouseCallBack() {
+                @Override
+                public void call(Mouse e) {
 
+                    if(FIRERATE > 0 ) {
+                        FIRERATE--;
+                        if (e.getDown() == 1 && FIRERATE == 0) {
+                            if(mana > 0) {
+                                double dx = e.getX() - Antivist.getInstance().getWidth() / 2;
+                                double dy = e.getY() - Antivist.getInstance().getHeight() / 2 + 32;
+                                double dir = Math.atan2(dy, dx);
+                                Bullet projectile = new Bullet(getLevel(), new JsonObject());
+                                projectile.setVelocity(Vector2i.fromAngle(dir));
+                                shoot(projectile);
+                                if (mana > 0) {
+                                    mana -= 0.02;
+                                    if (mana < 0) mana = 0;
+                                }
+                            }
+                        }
+                    }else{
+                        FIRERATE = 5;
+                    }
+                }
+            };
+
+        mouseCallBack.setCallOnMove(false);
+        level.getMouse().addCallBack(100,mouseCallBack);
     }
 
 
@@ -111,31 +139,11 @@ public class Player extends Mob {
         if (xa != 0 || ya != 0) {
             move(xa, ya);
         }
-
-        if(FIRERATE > 0 ) {
-            FIRERATE--;
-        }else{
-            FIRERATE = 3;
-            if (Mouse.getMouseButton() == 1) {
-                if(mana > 0) {
-                    double dx = Mouse.getMouseX() - Antivist.getInstance().getWidth() / 2;
-                    double dy = Mouse.getMouseY() - Antivist.getInstance().getHeight() / 2 + 32;
-                    double dir = Math.atan2(dy, dx);
-                    Bullet projectile = new Bullet(getLevel(), new JsonObject());
-                    projectile.setVelocity(Vector2i.fromAngle(dir));
-                    shoot(projectile);
-                    if (mana > 0) {
-                        mana -= 0.01;
-                        if (mana < 0) mana = 0;
-                    }
-                }
-            }else{
-                if(mana < 1){
-                    mana += 0.0025;
-                    if(mana > 1 ) mana = 1;
-                }
-            }
+        if(mana < 1){
+            mana += 0.002;
+            if(mana > 1 ) mana = 1;
         }
+
     }
 
     @Override

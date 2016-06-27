@@ -1,9 +1,14 @@
 package me.Sauerbier.Antivist.Graphics.UI;
 
+import me.Sauerbier.Antivist.Antivist;
 import me.Sauerbier.Antivist.FrameWork.Mouse;
+import me.Sauerbier.Antivist.FrameWork.MouseCallBack;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author Sauerbier | Jan
@@ -17,11 +22,12 @@ public class UIButton implements UIComponent {
     private Vector2i size;
     private Color color,textColor;
     private UIComponent parent;
-    private UIComponent child;
+    private List<UIComponent> childs = new ArrayList<>();
     private UIButtonEvent event;
-    private UIActionListener actionEvent;
+    private MouseCallBack callBack;
     private Rectangle bounds;
-    private boolean inside;
+    private boolean inside,pressed,ignorePress;
+    private Image icon;
 
     public UIButton(String text,Vector2i position, Vector2i size, Color color, Color textColor) {
         this.text = text;
@@ -30,38 +36,72 @@ public class UIButton implements UIComponent {
         this.color = color;
         this.textColor = textColor;
         bounds = new Rectangle(position.getX(),position.getY(),size.getX() + 5,size.getY());
+        callBack = new MouseCallBack() {
+            @Override
+            public void call(Mouse e) {
+                if (event != null && bounds.contains(e.getX(), e.getY())) {
+                    if(!inside) {
+                        if(e.getDown() == MouseEvent.BUTTON1) {
+                            ignorePress = true;
+                        }else ignorePress = false;
+                        event.mouseEnter(UIButton.this);
+                    }
+                    inside = true;
+
+                    if(!pressed && !ignorePress && e.getDown() == MouseEvent.BUTTON1){
+                        event.pressed(UIButton.this);
+                        pressed = true;
+                        callBack.setCanceled(true);
+                    }else if( e.getDown() == MouseEvent.NOBUTTON){
+                        if(pressed){
+
+                            pressed = false;
+                            event.released(UIButton.this);
+                            callBack.setCanceled(false);
+                        }
+                        ignorePress = false;
+                    }
+                }else{
+                    if(inside) {
+                        event.mouseLeave(UIButton.this);
+                        pressed = false;
+                        callBack.setCanceled(false);
+                    }
+                    inside = false;
+                }
+            }
+        };
+        callBack.setCallOnMove(true);
+        Antivist.getCurrent().getMouse().addCallBack(1,callBack);
     }
 
     @Override
     public void update() {
         if(event != null) {
-            if (bounds.contains(Mouse.getMouseX(), Mouse.getMouseY())) {
-                if(!inside)
-                    event.mouseEnter(this);
-                inside = true;
-            }else{
-                if(inside)
-                    event.mouseLeave(this);
-                inside = false;
-            }
+
         }
 
 
-        if(child != null)
-            child.update();
+        for (int i = 0; i < childs.size(); i++) {
+            childs.get(i).update();
+        }
     }
 
     @Override
     public void render(Graphics g) {
-        g.setColor(color);
-        //g.fillRect(position.getX(),position.getY(),size.getX() + 5,size.getY());
-       g.fillRoundRect(position.getX(),position.getY(),size.getX() + 5,size.getY(),5,5);
-        if(!text.equals("")) {
-            g.setColor(textColor);
-            g.drawString(text, position.getX() + 5, position.getY() + 15);
+        if(icon == null) {
+            g.setColor(color);
+            g.fillRoundRect(position.getX(), position.getY(), size.getX() + 5, size.getY(), 5, 5);
+            if (!text.equals("")) {
+                g.setColor(textColor);
+                g.drawString(text, position.getX() + 5, position.getY() + 15);
+            }
+        }else{
+            g.drawImage(icon,position.getX(), position.getY(),null);
         }
-        if(child != null)
-            child.render(g);
+        for (int i = 0; i < childs.size(); i++) {
+            childs.get(i).render(g);
+        }
     }
 
     @Override
@@ -70,7 +110,7 @@ public class UIButton implements UIComponent {
         Vector2i rel = position.clone();
         rel.add(component.getPosition());
         component.setPosition(rel);
-        this.child = component;
+        childs.add(component);
     }
 
     @Override
@@ -97,14 +137,6 @@ public class UIButton implements UIComponent {
     @Override
     public Color getBackgroundColor() {
         return color;
-    }
-
-    public UIActionListener getActionEvent() {
-        return actionEvent;
-    }
-
-    public void setActionEvent(UIActionListener actionEvent) {
-        this.actionEvent = actionEvent;
     }
 
     public UIButtonEvent getEvent() {
@@ -147,19 +179,20 @@ public class UIButton implements UIComponent {
         this.textColor = textColor;
     }
 
-    public UIComponent getChild() {
-        return child;
-    }
-
-    public void setChild(UIComponent child) {
-        this.child = child;
-    }
-
     public Rectangle getBounds() {
         return bounds;
     }
 
     public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
+    }
+
+    public Image getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Image icon) {
+        bounds = new Rectangle(getPosition().getX(),getPosition().getY() ,icon.getWidth(null),icon.getHeight(null));
+        this.icon = icon;
     }
 }

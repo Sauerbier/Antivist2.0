@@ -1,5 +1,6 @@
 package me.Sauerbier.Antivist;
 
+import me.Sauerbier.Antivist.FrameWork.GameTickAdapter;
 import me.Sauerbier.Antivist.Graphics.PlayerUI;
 import me.Sauerbier.Antivist.Graphics.UI.UIManager;
 import me.Sauerbier.Antivist.Level.Level;
@@ -10,6 +11,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * @Author Sauerbier | Jan
@@ -31,6 +33,8 @@ public class Antivist extends Canvas implements Runnable{
     private UIManager uiManager;
     private BufferedImage finalView = new BufferedImage(WIDTH ,HEIGHT, BufferedImage.TYPE_INT_RGB);
     private int[] viewPixels = ((DataBufferInt)finalView.getRaster().getDataBuffer()).getData();
+    private ArrayList<GameTickAdapter> tickAdapters = new ArrayList<>();
+
 
     public static void main(String[] args){
         instance = new Antivist();
@@ -53,9 +57,9 @@ public class Antivist extends Canvas implements Runnable{
 
         frame = new JFrame();
         level = new Level(new File(Antivist.class.getResource("/levels/the_begin/").getPath()));
+        current = level;
         uiManager = new UIManager();
         ui = new PlayerUI(level.getClientPlayer());
-        current = level;
         addKeyListener(level.getKeyboard());
         addMouseListener(level.getMouse());
         addMouseMotionListener(level.getMouse());
@@ -146,8 +150,20 @@ public class Antivist extends Canvas implements Runnable{
         level.update();
         ui.update();
         uiManager.update();
+
+        for (int i = 0; i < tickAdapters.size(); i++) {
+            tickAdapters.get(i).onTick();
+        }
     }
 
+
+    public void addTickAdapter(GameTickAdapter adapter){
+        tickAdapters.add(adapter);
+    }
+
+    public void removeTickAdapter(GameTickAdapter adapter){
+        tickAdapters.remove(adapter);
+    }
     public JFrame getFrame() {
         return frame;
     }

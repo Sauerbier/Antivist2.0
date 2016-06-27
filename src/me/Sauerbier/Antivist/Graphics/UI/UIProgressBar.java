@@ -3,6 +3,8 @@ package me.Sauerbier.Antivist.Graphics.UI;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author Sauerbier | Jan
@@ -16,7 +18,7 @@ public class UIProgressBar implements UIComponent {
     private Color color;
     private double progress;
     private UIComponent parent;
-    private UIComponent child;
+    private List<UIComponent> childs = new ArrayList<>();
     private boolean blink = false;
     private double percentage;
     private Color blinkColor;
@@ -38,6 +40,10 @@ public class UIProgressBar implements UIComponent {
                 blinkDelay++;
             }
         }
+
+        for (int i = 0; i < childs.size(); i++) {
+            childs.get(i).update();
+        }
     }
 
     @Override
@@ -55,10 +61,9 @@ public class UIProgressBar implements UIComponent {
         }
 
 
-        if(child != null) {
-            child.render(g);
+        for (int i = 0; i < childs.size(); i++) {
+            childs.get(i).render(g);
         }
-
     }
 
 
@@ -75,7 +80,7 @@ public class UIProgressBar implements UIComponent {
         Vector2i rel = position.clone();
         rel.add(component.getPosition());
         component.setPosition(rel);
-        this.child = component;
+        childs.add(component);
     }
 
     @Override

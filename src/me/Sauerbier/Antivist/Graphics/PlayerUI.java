@@ -1,11 +1,18 @@
 package me.Sauerbier.Antivist.Graphics;
 
+import com.google.gson.JsonObject;
 import me.Sauerbier.Antivist.Antivist;
+import me.Sauerbier.Antivist.Entity.Entities.Particle.FadingSystem;
+import me.Sauerbier.Antivist.Entity.Entities.Particle.Particle;
 import me.Sauerbier.Antivist.Entity.Mobs.Player;
+import me.Sauerbier.Antivist.FrameWork.Vector2d;
 import me.Sauerbier.Antivist.FrameWork.Vector2i;
 import me.Sauerbier.Antivist.Graphics.UI.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @Author Sauerbier | Jan
@@ -51,15 +58,57 @@ public class PlayerUI {
         energyBar.blink(true,0.3,Color.red);
 
         UIButton button = new UIButton("Test Button",new Vector2i(5,90),new Vector2i(85,20),Color.blue,Color.white);
+         Image icon = null;
+         Image icon_high = null;
+        try {
+             icon = ImageIO.read(new File("res/textures/Icons","firework.png"));
+             icon_high = ImageIO.read(new File("res/textures/Icons","firework_highlighted.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        button.setIcon(icon);
+
+        Image finalIcon_high = icon_high;
+        Image finalIcon = icon;
         button.setEvent(new UIButtonEvent() {
             @Override
             public void mouseEnter(UIButton button) {
-                button.setColor(new Color(107, 107, 255));
+                //button.setColor(new Color(107, 107, 255));
+                button.setIcon(finalIcon_high);
             }
 
             @Override
             public void mouseLeave(UIButton button) {
                 button.setColor(Color.blue);
+                button.setIcon(finalIcon);
+            }
+
+            @Override
+            public void pressed(UIButton button) {
+
+                JsonObject object = new JsonObject();
+                object.addProperty("sprite","null");
+                object.addProperty("life", 200);
+                object.addProperty("collide", true);
+                JsonObject system = new JsonObject();
+                system.addProperty("startColor",player.getRandom().nextInt(0xffffff));
+                system.addProperty("endColor",player.getRandom().nextInt(0xffffff));
+                system.addProperty("life", 200);
+                Particle particle = null;
+                for (int i = 0; i < 100; i++) {
+                    particle = new Particle(player.getLevel(),object);
+                    particle.setSystem(new FadingSystem(particle, system));
+                    particle.setPosition(new Vector2d(player.getPosition().getX() + (player.getSprite().getSizeX() >> 1),player.getPosition().getY() ));
+                    player.getLevel().add(particle);
+
+                }
+
+            }
+
+            @Override
+            public void released(UIButton button) {
+               // button.setColor(Color.blue);
             }
         });
         panel.add(button);
